@@ -22,7 +22,7 @@ class _RootState extends State<Root> {
       setTheme: setTheme,
       child: MaterialApp(
         title: 'Poker Companion',
-        theme: AppTheme.themeFor('6'),
+        theme: _theme,
         home: const HomePage(title: 'home page'),
         color: Colors.cyan,
       ),

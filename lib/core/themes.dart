@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const _themes = {
+const globalColorSchemes = {
   '0': (
     Color(0xFFFAF7F2),
     Color(0xFF1F2430),
@@ -43,14 +43,25 @@ const _themes = {
     Color(0xFFA8C4D2),
     Brightness.dark,
   ),
+  '7': (
+    Color(0xFF221D20),
+    Color(0xFFEDE6E8),
+    Color(0xFFD3A9B6),
+    Brightness.dark,
+  ),
   'default': (Colors.white, Colors.black, Colors.red, Brightness.light),
 };
 
 class AppTheme {
   static ThemeData themeFor(String id) {
-    final (surface, onSurface, accent, brightness) = _themes.containsKey(id)
-        ? _themes[id]!
-        : _themes['default']!;
+    final (
+      surface,
+      onSurface,
+      accent,
+      brightness,
+    ) = globalColorSchemes.containsKey(id)
+        ? globalColorSchemes[id]!
+        : globalColorSchemes['default']!;
     return _build(_scheme(surface, onSurface, accent, brightness));
   }
 
