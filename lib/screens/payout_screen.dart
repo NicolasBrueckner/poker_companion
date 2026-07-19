@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:poker_companion/core/utility.dart';
+import 'package:poker_companion/screens/statistics_screen.dart';
 import 'package:poker_companion/widgets/base_button.dart';
 import 'package:poker_companion/widgets/payout_row.dart';
 
@@ -89,6 +91,17 @@ class _PayoutScreenState extends State<PayoutScreen> {
                   onEditPressed: (() => setState(() {
                     _isCalculated = false;
                   })),
+                  onSavePressed: () async {
+                    final sessions = await SessionUtility().load();
+                    sessions.add(
+                      SessionInfo(
+                        date: '${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}',
+                        table: _players,
+                      ),
+                    );
+                    await SessionUtility().save(sessions);
+                    if (!context.mounted) return;
+                  },
                   transactions: _transactions,
                 ),
               ],
@@ -107,11 +120,13 @@ class _ConditionalSlice extends StatelessWidget {
     required this.onCalculatePressed,
     required this.onEditPressed,
     required this.transactions,
+    required this.onSavePressed,
   });
   final bool condition;
   final VoidCallback onAddPressed;
   final VoidCallback onCalculatePressed;
   final VoidCallback onEditPressed;
+  final VoidCallback onSavePressed;
   final List<Transaction> transactions;
 
   @override
@@ -126,7 +141,12 @@ class _ConditionalSlice extends StatelessWidget {
     }
     return Column(
       children: [
-        BaseButton(label: 'Edit', onPressed: onEditPressed),
+        Row(
+          children: [
+            BaseButton(label: 'Edit', onPressed: onEditPressed),
+            BaseButton(label: 'Save', onPressed: onSavePressed),
+          ],
+        ),
         PayoutResult(transactions: transactions),
       ],
     );
@@ -177,6 +197,12 @@ class PlayerEntry {
   double moneyIn;
   double moneyOut;
   double get net => moneyOut - moneyIn;
+
+  Map<String, dynamic> toJSON() => {'name': name, 'moneyIn': moneyIn, 'moneyOut': moneyOut, 'net': net};
+  PlayerEntry.fromJSON(Map<String, dynamic> j)
+    : name = j['name'],
+      moneyIn = (j['moneyIn'] as num).toDouble(),
+      moneyOut = (j['moneyOut'] as num).toDouble();
 }
 
 class Transaction {

@@ -1,27 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:poker_companion/screens/statistics_screen.dart';
 
 class StatisticItem extends StatelessWidget {
-  const StatisticItem({super.key, required this.date, required this.pot, required this.playerInfo});
-  final DateTime date;
-  final double pot;
-  final Map<String, (double, double, double)> playerInfo;
+  const StatisticItem({super.key, required this.info});
+  final SessionInfo info;
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      decoration: BoxDecoration(
+        border: BoxBorder.all(
+          color: Colors.black,
+          width: 2,
+          style: BorderStyle.solid,
+          strokeAlign: BorderSide.strokeAlignInside,
+        ),
+      ),
       child: Column(
         children: [
-          Text(DateTime(2001, 1, 1).toString()),
-          Text('pot: 30€'),
-          ...playerInfo.entries.map((entry) {
-            final String name = entry.key;
-            final (double, double, double) values = entry.value;
+          Text(info.date),
+          Text(info.pot.toString()),
+          ...info.table.map((entry) {
             return Row(
               children: [
-                Text(name),
-                Text(values.$1.toString()),
-                Text(values.$2.toString()),
-                Text(values.$3.toString()),
+                Text(entry.name),
+                Text(entry.moneyIn.toString()),
+                Text(entry.moneyOut.toString()),
+                Text(entry.net.toString()),
               ],
             );
           }),
@@ -30,12 +35,3 @@ class StatisticItem extends StatelessWidget {
     );
   }
 }
-
-/*
-parts:
-  - date: date
-  - pot: double from all "in"
-  - table:
-    - name: string, in: double, out:double, net: double
-    - sort by net
-*/
