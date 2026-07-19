@@ -19,8 +19,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           child: Column(
             spacing: 10,
             children: [
-              Text('Themes'),
-              FractionallySizedBox(widthFactor: 0.5, child: ColorSwitch()),
+              Text('Themes', style: Theme.of(context).textTheme.headlineSmall),
+              FractionallySizedBox(widthFactor: 0.3, child: ColorSwitch()),
             ],
           ),
         ),

@@ -7,12 +7,7 @@ class OutlineMapper extends ColorMapper {
   final Color black;
 
   @override
-  Color substitute(
-    String? id,
-    String elementName,
-    String attributeName,
-    Color color,
-  ) {
+  Color substitute(String? id, String elementName, String attributeName, Color color) {
     if (color == Color(0xFFFFFFFF)) {
       return red;
     } else if (color == Color(0xFF000000)) {
@@ -23,17 +18,13 @@ class OutlineMapper extends ColorMapper {
 }
 
 class ThemeController extends InheritedWidget {
-  const ThemeController({
-    super.key,
-    required this.setTheme,
-    required super.child,
-  });
+  const ThemeController({super.key, required this.setTheme, required this.activeTheme, required super.child});
 
   final void Function(String) setTheme;
+  final String activeTheme;
 
-  static ThemeController of(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<ThemeController>()!;
+  static ThemeController of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<ThemeController>()!;
 
   @override
-  bool updateShouldNotify(ThemeController old) => false;
+  bool updateShouldNotify(ThemeController old) => activeTheme != old.activeTheme;
 }
