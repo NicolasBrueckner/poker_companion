@@ -16,6 +16,10 @@ class PayoutScreen extends StatefulWidget {
 class _PayoutScreenState extends State<PayoutScreen> {
   final List<PlayerEntry> _players = [PlayerEntry()];
   final List<Transaction> _transactions = [];
+  final SessionInfo _currentSession = SessionInfo(
+    date: '${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}',
+    table: [],
+  );
   bool _isCalculated = false;
 
   void _calculateTransactions() {
@@ -47,6 +51,48 @@ class _PayoutScreenState extends State<PayoutScreen> {
     }
   }
 
+  void _onAddPressed() {
+    setState(() {
+      _players.add(PlayerEntry());
+    });
+  }
+
+  void _onCalculatePressed() {
+    final sum = _players.fold<double>(0, (sum, p) => sum + p.net);
+    if (sum.abs() > 0.001) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Money In and out don\'t match')));
+      return;
+    }
+    setState(() {
+      _isCalculated = true;
+      _calculateTransactions();
+    });
+  }
+
+  void _onEditPressed() {
+    setState(() {
+      _isCalculated = false;
+    });
+  }
+
+  void _onSavePressed() async {
+    await _saveSession();
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Saved')));
+  }
+
+  Future<void> _saveSession() async {
+    final sessions = await SessionUtility.load();
+    _currentSession.table = _players.map((p) => p.copy()).toList();
+    final i = sessions.indexWhere((s) => s.id == _currentSession.id);
+    if (i >= 0) {
+      sessions[i] = _currentSession;
+    } else {
+      sessions.add(_currentSession);
+    }
+    await SessionUtility.save(sessions);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,36 +118,10 @@ class _PayoutScreenState extends State<PayoutScreen> {
                 )),
                 _ConditionalSlice(
                   condition: _isCalculated,
-                  onAddPressed: () => setState(() {
-                    _players.add(PlayerEntry());
-                  }),
-                  onCalculatePressed: () {
-                    final sum = _players.fold<double>(0, (sum, p) => sum + p.net);
-                    if (sum.abs() > 0.001) {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(const SnackBar(content: Text('Money In and out don\'t match')));
-                      return;
-                    }
-                    setState(() {
-                      _isCalculated = true;
-                      _calculateTransactions();
-                    });
-                  },
-                  onEditPressed: (() => setState(() {
-                    _isCalculated = false;
-                  })),
-                  onSavePressed: () async {
-                    final sessions = await SessionUtility().load();
-                    sessions.add(
-                      SessionInfo(
-                        date: '${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}',
-                        table: _players,
-                      ),
-                    );
-                    await SessionUtility().save(sessions);
-                    if (!context.mounted) return;
-                  },
+                  onAddPressed: _onAddPressed,
+                  onCalculatePressed: _onCalculatePressed,
+                  onEditPressed: _onEditPressed,
+                  onSavePressed: _onSavePressed,
                   transactions: _transactions,
                 ),
               ],
@@ -142,6 +162,7 @@ class _ConditionalSlice extends StatelessWidget {
     return Column(
       children: [
         Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             BaseButton(label: 'Edit', onPressed: onEditPressed),
             BaseButton(label: 'Save', onPressed: onSavePressed),
@@ -200,9 +221,11 @@ class PlayerEntry {
 
   Map<String, dynamic> toJSON() => {'name': name, 'moneyIn': moneyIn, 'moneyOut': moneyOut, 'net': net};
   PlayerEntry.fromJSON(Map<String, dynamic> j)
-    : name = j['name'],
+    : name = j['name'] ?? '',
       moneyIn = (j['moneyIn'] as num).toDouble(),
       moneyOut = (j['moneyOut'] as num).toDouble();
+
+  PlayerEntry copy() => PlayerEntry(name: name, moneyIn: moneyIn, moneyOut: moneyOut);
 }
 
 class Transaction {

@@ -20,7 +20,7 @@ class StatisticsScreenState extends State<StatisticsScreen> {
   }
 
   Future<void> _loadSessions() async {
-    final data = await SessionUtility().load();
+    final data = await SessionUtility.load();
     setState(() => _sessions = data);
   }
 
@@ -34,14 +34,22 @@ class StatisticsScreenState extends State<StatisticsScreen> {
 }
 
 class SessionInfo {
-  SessionInfo({required this.date, required this.table});
+  SessionInfo({String? id, required this.date, required this.table})
+    : id = id ?? DateTime.now().microsecondsSinceEpoch.toString();
+  final String id;
   final String date;
-  final List<PlayerEntry> table;
+  List<PlayerEntry> table;
   double get pot => table.fold<double>(0, (sum, p) => sum + p.moneyIn);
 
-  Map<String, dynamic> toJSON() => {'date': date, 'pot': pot, 'table': table.map((p) => p.toJSON()).toList()};
+  Map<String, dynamic> toJSON() => {
+    'id': id as String? ?? DateTime.now().microsecondsSinceEpoch.toString(),
+    'date': date as String? ?? '',
+    'pot': pot,
+    'table': table.map((p) => p.toJSON()).toList(),
+  };
 
   SessionInfo.fromJSON(Map<String, dynamic> j)
-    : date = j['date'],
+    : id = j['id'] ?? DateTime.now().microsecondsSinceEpoch.toString(),
+      date = j['date'] ?? '',
       table = (j['table'] as List).map((e) => PlayerEntry.fromJSON(e)).toList();
 }

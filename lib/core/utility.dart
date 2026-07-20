@@ -35,20 +35,26 @@ class ThemeController extends InheritedWidget {
 }
 
 class SessionUtility {
-  Future<File> _file() async {
+  static Future<File> _file() async {
     final dir = await getApplicationDocumentsDirectory();
     return File('${dir.path}/sessions.json');
   }
 
-  Future<void> save(List<SessionInfo> sessions) async {
+  static Future<void> save(List<SessionInfo> sessions) async {
     final file = await _file();
     await file.writeAsString(jsonEncode(sessions.map((s) => s.toJSON()).toList()));
   }
 
-  Future<List<SessionInfo>> load() async {
+  static Future<List<SessionInfo>> load() async {
     final file = await _file();
     if (!await file.exists()) return [];
     final data = jsonDecode(await file.readAsString()) as List<dynamic>;
     return data.map((j) => SessionInfo.fromJSON(j)).toList();
+  }
+
+  static Future<void> clear() async {
+    List<SessionInfo> sessions = await load();
+    sessions.clear();
+    save(sessions);
   }
 }

@@ -1,3 +1,4 @@
+import 'package:poker_companion/core/utility.dart';
 import 'package:poker_companion/screens/payout_screen.dart';
 import 'package:poker_companion/screens/settings_screen.dart';
 import 'package:poker_companion/screens/statistics_screen.dart';
@@ -29,24 +30,15 @@ class _HomePageState extends State<HomePage> {
               SuitsRowWidget(),
               BaseButton(
                 label: 'Payout Calculator',
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => PayoutScreen()),
-                ),
+                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => PayoutScreen())),
               ),
               BaseButton(
                 label: 'Statistics',
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => StatisticsScreen()),
-                ),
+                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => StatisticsScreen())),
               ),
               BaseButton(
                 label: 'Settings',
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => SettingsScreen()),
-                ),
+                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => SettingsScreen())),
               ),
             ],
           ),
