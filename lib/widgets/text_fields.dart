@@ -9,12 +9,14 @@ class InputField extends StatelessWidget {
     this.maxLength = 8,
     this.keyboardType = TextInputType.text,
     this.inputFormatters,
+    this.isReadOnly = false,
   });
   final ValueChanged<String> onChanged;
   final String? hintText;
   final int maxLength;
   final TextInputType keyboardType;
   final List<TextInputFormatter>? inputFormatters;
+  final bool isReadOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +24,7 @@ class InputField extends StatelessWidget {
     final Color onPrimary = Theme.of(context).colorScheme.onPrimary;
 
     return TextField(
+      readOnly: isReadOnly,
       onChanged: onChanged,
       style: TextStyle(color: onPrimary),
       maxLength: maxLength,

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:poker_companion/core/utility.dart';
 import 'package:poker_companion/screens/statistics_screen.dart';
 import 'package:poker_companion/widgets/base_button.dart';
-import 'package:poker_companion/widgets/payout_row.dart';
+import 'package:poker_companion/widgets/payout_rows.dart';
 
 class PayoutScreen extends StatefulWidget {
   const PayoutScreen({super.key});
@@ -77,7 +77,7 @@ class _PayoutScreenState extends State<PayoutScreen> {
 
   void _onSavePressed() async {
     await _saveSession();
-    if (!context.mounted) return;
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Saved')));
   }
 
@@ -106,7 +106,7 @@ class _PayoutScreenState extends State<PayoutScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 ...(_players.map(
-                  (p) => PayoutInputRowWidget(
+                  (p) => PayoutInputRow(
                     key: ObjectKey(p),
                     entry: p,
                     onChanged: (_) => setState(() {}),
@@ -114,6 +114,7 @@ class _PayoutScreenState extends State<PayoutScreen> {
                       _players.remove(p);
                       setState(() {});
                     },
+                    isInputLocked: _isCalculated,
                   ),
                 )),
                 _ConditionalSlice(
@@ -181,6 +182,7 @@ class PayoutResult extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      spacing: 5,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -190,16 +192,7 @@ class PayoutResult extends StatelessWidget {
             Expanded(child: Text('Amount', textAlign: TextAlign.center)),
           ],
         ),
-        ...(transactions.map(
-          (r) => Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(child: Text(r.from, textAlign: TextAlign.center)),
-              Expanded(child: Text(r.to, textAlign: TextAlign.center)),
-              Expanded(child: Text(r.amount.toStringAsFixed(2), textAlign: TextAlign.center)),
-            ],
-          ),
-        )),
+        ...(transactions.map((r) => PayoutOutputRow(transaction: r))),
       ],
     );
   }

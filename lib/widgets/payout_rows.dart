@@ -3,11 +3,18 @@ import 'package:flutter/services.dart';
 import 'package:poker_companion/screens/payout_screen.dart';
 import 'package:poker_companion/widgets/text_fields.dart';
 
-class PayoutInputRowWidget extends StatelessWidget {
-  const PayoutInputRowWidget({super.key, required this.entry, required this.onChanged, required this.onDelete});
+class PayoutInputRow extends StatelessWidget {
+  const PayoutInputRow({
+    super.key,
+    required this.entry,
+    required this.onChanged,
+    required this.onDelete,
+    this.isInputLocked = false,
+  });
   final PlayerEntry entry;
   final ValueChanged<PlayerEntry> onChanged;
   final VoidCallback onDelete;
+  final bool isInputLocked;
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +29,7 @@ class PayoutInputRowWidget extends StatelessWidget {
                 entry.name = value;
                 onChanged(entry);
               },
+              isReadOnly: isInputLocked,
             ),
           ),
           Expanded(
@@ -33,6 +41,7 @@ class PayoutInputRowWidget extends StatelessWidget {
               hintText: '0.00',
               inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))],
               keyboardType: TextInputType.numberWithOptions(signed: false, decimal: true),
+              isReadOnly: isInputLocked,
             ),
           ),
           Expanded(
@@ -44,6 +53,7 @@ class PayoutInputRowWidget extends StatelessWidget {
               hintText: '0.00',
               inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))],
               keyboardType: TextInputType.numberWithOptions(signed: false, decimal: true),
+              isReadOnly: isInputLocked,
             ),
           ),
           Expanded(child: OutputField(value: entry.net.toStringAsFixed(2))),
@@ -53,6 +63,24 @@ class PayoutInputRowWidget extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class PayoutOutputRow extends StatelessWidget {
+  const PayoutOutputRow({super.key, required this.transaction});
+  final Transaction transaction;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      spacing: 10,
+      children: [
+        Expanded(child: OutputField(value: transaction.from)),
+        Expanded(child: OutputField(value: transaction.to)),
+        Expanded(child: OutputField(value: transaction.amount.toStringAsFixed(2))),
+      ],
     );
   }
 }
