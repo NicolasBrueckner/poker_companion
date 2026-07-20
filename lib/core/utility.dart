@@ -42,7 +42,7 @@ class SessionUtility {
 
   Future<void> save(List<SessionInfo> sessions) async {
     final file = await _file();
-    await file.writeAsString(jsonEncode(sessions.map((s) => s.toJSON().toString())));
+    await file.writeAsString(jsonEncode(sessions.map((s) => s.toJSON()).toList()));
   }
 
   Future<List<SessionInfo>> load() async {

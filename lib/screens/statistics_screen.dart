@@ -37,7 +37,7 @@ class SessionInfo {
   SessionInfo({required this.date, required this.table});
   final String date;
   final List<PlayerEntry> table;
-  get pot => table.fold<double>(0, (sum, p) => sum + p.moneyIn);
+  double get pot => table.fold<double>(0, (sum, p) => sum + p.moneyIn);
 
   Map<String, dynamic> toJSON() => {'date': date, 'pot': pot, 'table': table.map((p) => p.toJSON()).toList()};
 
