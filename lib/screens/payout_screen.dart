@@ -1,9 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:poker_companion/core/payout_data.dart';
 import 'package:poker_companion/core/utility.dart';
+import 'package:poker_companion/screens/base_screen.dart';
 import 'package:poker_companion/screens/statistics_screen.dart';
-import 'package:poker_companion/widgets/base_button.dart';
+import 'package:poker_companion/widgets/buttons.dart';
 import 'package:poker_companion/widgets/payout_rows.dart';
 
 class PayoutScreen extends StatefulWidget {
@@ -23,9 +25,9 @@ class _PayoutScreenState extends State<PayoutScreen> {
   bool _isCalculated = false;
 
   void _calculateTransactions() {
-    final List<_PlayerBalance> balances = _players.map((p) => _PlayerBalance(name: p.name, balance: p.net)).toList();
-    _PlayerBalance? debtor;
-    _PlayerBalance? creditor;
+    final List<PlayerBalance> balances = _players.map((p) => PlayerBalance(name: p.name, balance: p.net)).toList();
+    PlayerBalance? debtor;
+    PlayerBalance? creditor;
 
     _transactions.clear();
 
@@ -95,39 +97,34 @@ class _PayoutScreenState extends State<PayoutScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Payout Calculator')),
-      body: Center(
-        child: FractionallySizedBox(
-          widthFactor: 0.5,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                ...(_players.map(
-                  (p) => PayoutInputRow(
-                    key: ObjectKey(p),
-                    entry: p,
-                    onChanged: (_) => setState(() {}),
-                    onDelete: () {
-                      _players.remove(p);
-                      setState(() {});
-                    },
-                    isInputLocked: _isCalculated,
-                  ),
-                )),
-                _ConditionalSlice(
-                  condition: _isCalculated,
-                  onAddPressed: _onAddPressed,
-                  onCalculatePressed: _onCalculatePressed,
-                  onEditPressed: _onEditPressed,
-                  onSavePressed: _onSavePressed,
-                  transactions: _transactions,
-                ),
-              ],
+    return BaseScreen(
+      title: 'Payout Calculator',
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ...(_players.map(
+              (p) => PayoutInputRow(
+                key: ObjectKey(p),
+                entry: p,
+                onChanged: (_) => setState(() {}),
+                onDelete: (_) {
+                  _players.remove(p);
+                  setState(() {});
+                },
+                isInputLocked: _isCalculated,
+              ),
+            )),
+            _ConditionalSlice(
+              condition: _isCalculated,
+              onAddPressed: _onAddPressed,
+              onCalculatePressed: _onCalculatePressed,
+              onEditPressed: _onEditPressed,
+              onSavePressed: _onSavePressed,
+              transactions: _transactions,
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -155,8 +152,8 @@ class _ConditionalSlice extends StatelessWidget {
     if (!condition) {
       return Column(
         children: [
-          BaseButton(label: '+', onPressed: onAddPressed),
-          BaseButton(label: 'Calculate', onPressed: onCalculatePressed),
+          BaseTextButton(label: '+', onPressed: onAddPressed),
+          BaseTextButton(label: 'Calculate', onPressed: onCalculatePressed),
         ],
       );
     }
@@ -165,8 +162,12 @@ class _ConditionalSlice extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            BaseButton(label: 'Edit', onPressed: onEditPressed),
-            BaseButton(label: 'Save', onPressed: onSavePressed),
+            Expanded(
+              child: BaseTextButton(label: 'Edit', onPressed: onEditPressed),
+            ),
+            Expanded(
+              child: BaseTextButton(label: 'Save', onPressed: onSavePressed),
+            ),
           ],
         ),
         PayoutResult(transactions: transactions),
@@ -196,35 +197,4 @@ class PayoutResult extends StatelessWidget {
       ],
     );
   }
-}
-
-class _PlayerBalance {
-  _PlayerBalance({required this.name, required this.balance});
-  final String name;
-  double balance;
-}
-
-class PlayerEntry {
-  PlayerEntry({this.name = '', this.moneyIn = 0, this.moneyOut = 0});
-
-  String name;
-  double moneyIn;
-  double moneyOut;
-  double get net => moneyOut - moneyIn;
-
-  Map<String, dynamic> toJSON() => {'name': name, 'moneyIn': moneyIn, 'moneyOut': moneyOut, 'net': net};
-  PlayerEntry.fromJSON(Map<String, dynamic> j)
-    : name = j['name'] ?? '',
-      moneyIn = (j['moneyIn'] as num).toDouble(),
-      moneyOut = (j['moneyOut'] as num).toDouble();
-
-  PlayerEntry copy() => PlayerEntry(name: name, moneyIn: moneyIn, moneyOut: moneyOut);
-}
-
-class Transaction {
-  Transaction({this.from = '', this.to = '', this.amount = 0});
-
-  String from;
-  String to;
-  double amount;
 }

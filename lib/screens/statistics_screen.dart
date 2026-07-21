@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:poker_companion/core/payout_data.dart';
 import 'package:poker_companion/core/utility.dart';
-import 'package:poker_companion/screens/payout_screen.dart';
+import 'package:poker_companion/screens/base_screen.dart';
 import 'package:poker_companion/widgets/statistic_item.dart';
 
 class StatisticsScreen extends StatefulWidget {
@@ -26,9 +27,9 @@ class StatisticsScreenState extends State<StatisticsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Statistics')),
-      body: ListView(children: _sessions.map((s) => StatisticItem(info: s)).toList()),
+    return BaseScreen(
+      title: 'Statistics',
+      child: ListView(children: _sessions.map((s) => StatisticItem(info: s)).toList()),
     );
   }
 }

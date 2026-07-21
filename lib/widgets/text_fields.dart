@@ -4,46 +4,32 @@ import 'package:flutter/services.dart';
 class InputField extends StatelessWidget {
   const InputField({
     super.key,
+    this.isReadOnly = false,
     required this.onChanged,
-    this.hintText,
     this.maxLength = 8,
     this.keyboardType = TextInputType.text,
     this.inputFormatters,
-    this.isReadOnly = false,
+    this.hintText,
   });
+  final bool isReadOnly;
   final ValueChanged<String> onChanged;
-  final String? hintText;
   final int maxLength;
   final TextInputType keyboardType;
   final List<TextInputFormatter>? inputFormatters;
-  final bool isReadOnly;
+  final String? hintText;
 
   @override
   Widget build(BuildContext context) {
-    final Color primary = Theme.of(context).colorScheme.primary;
-    final Color onPrimary = Theme.of(context).colorScheme.onPrimary;
-
+    ColorScheme scheme = Theme.of(context).colorScheme;
     return TextField(
       readOnly: isReadOnly,
       onChanged: onChanged,
-      style: TextStyle(color: onPrimary),
       maxLength: maxLength,
+      style: TextStyle(color: isReadOnly ? scheme.onSurface : scheme.onPrimary),
+      keyboardType: keyboardType,
       inputFormatters: inputFormatters,
-      decoration: InputDecoration(
-        hintText: hintText,
-        hintStyle: TextStyle(color: onPrimary),
-        counterText: '',
-        filled: true,
-        fillColor: primary,
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: BorderSide(style: BorderStyle.none),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: BorderSide(style: BorderStyle.none),
-        ),
-      ),
+      textAlignVertical: TextAlignVertical.center,
+      decoration: _payoutFieldDecoration(scheme: scheme, isReadOnly: isReadOnly, hintText: hintText),
     );
   }
 }
@@ -54,29 +40,40 @@ class OutputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color onSurface = Theme.of(context).colorScheme.onSurface;
-
-    return InputDecorator(
-      decoration: InputDecoration(
-        hintText: '0.00',
-        hintStyle: TextStyle(color: onSurface),
-        counterText: '',
-        filled: false,
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: BorderSide(
-            style: BorderStyle.solid,
-            color: onSurface,
-            width: 1,
-            strokeAlign: BorderSide.strokeAlignInside,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: BorderSide(style: BorderStyle.none),
-        ),
-      ),
-      child: Text(value),
+    return TextFormField(
+      key: ValueKey(value),
+      initialValue: value,
+      readOnly: true,
+      textAlignVertical: TextAlignVertical.center,
+      textAlign: TextAlign.end,
+      decoration: _payoutFieldDecoration(scheme: Theme.of(context).colorScheme, isReadOnly: true, hintText: '0.00'),
     );
   }
+}
+
+InputDecoration _payoutFieldDecoration({required ColorScheme scheme, required bool isReadOnly, String? hintText}) {
+  Color fill = isReadOnly ? scheme.surface : scheme.primary;
+  Color border = isReadOnly ? scheme.onSurface : scheme.primary;
+  Color text = isReadOnly ? scheme.onSurface : scheme.onPrimary;
+
+  OutlineInputBorder outlineInputBorder = OutlineInputBorder(
+    borderRadius: BorderRadius.circular(12),
+    borderSide: BorderSide(
+      color: border,
+      width: 1,
+      style: BorderStyle.solid,
+      strokeAlign: BorderSide.strokeAlignInside,
+    ),
+  );
+
+  return InputDecoration(
+    contentPadding: const EdgeInsets.symmetric(horizontal: 5),
+    filled: !isReadOnly,
+    fillColor: fill,
+    counterText: '',
+    hintText: hintText,
+    hintStyle: TextStyle(color: text),
+    enabledBorder: outlineInputBorder,
+    focusedBorder: outlineInputBorder,
+  );
 }

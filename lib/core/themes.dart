@@ -25,12 +25,7 @@ class AppTheme {
     useMaterial3: true,
     fontFamily: 'Nunito',
     textTheme: _text(),
-    outlinedButtonTheme: _outlinedButton(scheme),
-    textSelectionTheme: TextSelectionThemeData(
-      cursorColor: scheme.onPrimary,
-      selectionColor: scheme.onPrimary.withValues(alpha: 0.3),
-      selectionHandleColor: scheme.onPrimary,
-    ),
+    textSelectionTheme: _textSelection(scheme),
   );
 
   static ColorScheme _scheme(Color surface, Color onSurface, Color accent, Brightness brightness) {
@@ -40,38 +35,15 @@ class AppTheme {
     return ColorScheme.dark(surface: surface, onSurface: onSurface, primary: accent, onPrimary: surface);
   }
 
-  static OutlinedButtonThemeData _outlinedButton(ColorScheme scheme) {
-    const BorderSide baseSide = BorderSide(
-      width: 1.0,
-      strokeAlign: BorderSide.strokeAlignInside,
-      style: BorderStyle.solid,
-    );
-
-    return OutlinedButtonThemeData(
-      style: ButtonStyle(
-        backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
-          if (states.contains(WidgetState.pressed)) {
-            return scheme.primary;
-          }
-          return scheme.surface;
-        }),
-        foregroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
-          if (states.contains(WidgetState.pressed)) {
-            return scheme.surface;
-          }
-          return scheme.onSurface;
-        }),
-        side: WidgetStateProperty.resolveWith<BorderSide?>((states) {
-          if (states.contains(WidgetState.pressed)) {
-            return baseSide.copyWith(color: scheme.primary);
-          }
-          return baseSide.copyWith(color: scheme.onSurface);
-        }),
-      ),
-    );
-  }
-
   static TextTheme _text() {
     return TextTheme(headlineSmall: TextStyle(fontSize: 24, fontWeight: FontWeight.w600));
+  }
+
+  static TextSelectionThemeData _textSelection(ColorScheme scheme) {
+    return TextSelectionThemeData(
+      cursorColor: scheme.onPrimary,
+      selectionColor: scheme.onPrimary.withValues(alpha: 0.3),
+      selectionHandleColor: scheme.onPrimary,
+    );
   }
 }
