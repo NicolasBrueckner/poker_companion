@@ -7,14 +7,11 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BaseScreen(
+    return const BaseScreen(
       title: 'Settings',
-      child: Column(
-        spacing: 10,
-        children: [
-          Text('Themes', style: Theme.of(context).textTheme.headlineSmall),
-          FractionallySizedBox(widthFactor: 1, child: ColorSwitch()),
-        ],
+      child: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(vertical: 12),
+        child: ColorSwitch(),
       ),
     );
   }

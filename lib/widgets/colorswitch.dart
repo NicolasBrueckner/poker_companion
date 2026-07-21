@@ -8,27 +8,60 @@ class ColorSwitch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String activeKey = ThemeController.of(context).activeTheme;
+    final scheme = Theme.of(context).colorScheme;
 
+    final lightEntries = globalColorSchemes.entries
+        .where((e) => e.key != 'default' && e.value.$4 == Brightness.light)
+        .toList();
+    final darkEntries = globalColorSchemes.entries
+        .where((e) => e.key != 'default' && e.value.$4 == Brightness.dark)
+        .toList();
+
+    final labelStyle = TextStyle(
+      fontSize: 11,
+      fontWeight: FontWeight.w600,
+      color: scheme.onSurface.withValues(alpha: 0.55),
+      letterSpacing: 0.5,
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('LIGHT', style: labelStyle),
+        const SizedBox(height: 8),
+        _ThemeGrid(entries: lightEntries, activeKey: activeKey),
+        const SizedBox(height: 20),
+        Text('DARK', style: labelStyle),
+        const SizedBox(height: 8),
+        _ThemeGrid(entries: darkEntries, activeKey: activeKey),
+      ],
+    );
+  }
+}
+
+class _ThemeGrid extends StatelessWidget {
+  const _ThemeGrid({required this.entries, required this.activeKey});
+  final List<MapEntry<String, (Color, Color, Color, Brightness)>> entries;
+  final String activeKey;
+
+  @override
+  Widget build(BuildContext context) {
     return GridView.count(
       crossAxisCount: 4,
       crossAxisSpacing: 15,
       mainAxisSpacing: 10,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      children: [
-        ...(globalColorSchemes.entries.where((entry) => entry.key != 'default').map((entry) {
-          final key = entry.key;
-          final (a, _, b, _) = entry.value;
-          return ColorSwitchButton(
-            onPressed: () {
-              ThemeController.of(context).setTheme(key);
-            },
-            outer: activeKey == key ? a : b,
-            inner: activeKey == key ? b : a,
-            innerSizeFactor: activeKey == key ? 0.8 : 0.5,
-          );
-        })),
-      ],
+      children: entries.map((entry) {
+        final key = entry.key;
+        final (a, _, b, _) = entry.value;
+        return ColorSwitchButton(
+          onPressed: () => ThemeController.of(context).setTheme(key),
+          outer: activeKey == key ? a : b,
+          inner: activeKey == key ? b : a,
+          innerSizeFactor: activeKey == key ? 0.8 : 0.5,
+        );
+      }).toList(),
     );
   }
 }
@@ -56,7 +89,7 @@ class ColorSwitchButton extends StatelessWidget {
         curve: Curves.easeInOut,
         decoration: BoxDecoration(color: outer, shape: BoxShape.circle),
         child: AnimatedFractionallySizedBox(
-          duration: Duration(milliseconds: ms),
+          duration: const Duration(milliseconds: ms),
           widthFactor: innerSizeFactor,
           heightFactor: innerSizeFactor,
           child: AnimatedContainer(

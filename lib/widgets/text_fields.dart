@@ -53,7 +53,7 @@ class OutputField extends StatelessWidget {
 
 InputDecoration _payoutFieldDecoration({required ColorScheme scheme, required bool isReadOnly, String? hintText}) {
   Color fill = isReadOnly ? scheme.surface : scheme.primary;
-  Color border = isReadOnly ? scheme.onSurface : scheme.primary;
+  Color border = isReadOnly ? scheme.onSurface.withValues(alpha: 0.3) : scheme.primary;
   Color text = isReadOnly ? scheme.onSurface : scheme.onPrimary;
 
   OutlineInputBorder outlineInputBorder = OutlineInputBorder(

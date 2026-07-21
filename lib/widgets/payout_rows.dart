@@ -25,55 +25,54 @@ class PayoutInputRow extends StatelessWidget {
       background: Container(
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 16),
-        child: const Icon(Icons.delete),
+        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.12),
+        child: Icon(Icons.delete_outline, color: Theme.of(context).colorScheme.primary),
       ),
-      child: SizedBox(
-        height: 50,
-        child: Padding(
-          padding: const EdgeInsets.all(3),
-          child: Row(
-            spacing: 5,
-            children: [
-              Expanded(
-                flex: 3,
-                child: InputField(
-                  onChanged: (value) {
-                    entry.name = value;
-                    onChanged(entry);
-                  },
-                  isReadOnly: isInputLocked,
-                  maxLength: 12,
-                ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+        child: Row(
+          spacing: 5,
+          children: [
+            Expanded(
+              flex: 4,
+              child: InputField(
+                onChanged: (value) {
+                  entry.name = value;
+                  onChanged(entry);
+                },
+                isReadOnly: isInputLocked,
+                maxLength: 12,
+                hintText: 'Name',
               ),
-              Expanded(
-                flex: 3,
-                child: InputField(
-                  onChanged: (value) {
-                    entry.moneyIn = double.tryParse(value) ?? 0;
-                    onChanged(entry);
-                  },
-                  hintText: '0.00',
-                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))],
-                  keyboardType: TextInputType.numberWithOptions(signed: false, decimal: true),
-                  isReadOnly: isInputLocked,
-                ),
+            ),
+            Expanded(
+              flex: 3,
+              child: InputField(
+                onChanged: (value) {
+                  entry.moneyIn = double.tryParse(value) ?? 0;
+                  onChanged(entry);
+                },
+                hintText: '0.00',
+                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))],
+                keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: true),
+                isReadOnly: isInputLocked,
               ),
-              Expanded(
-                flex: 3,
-                child: InputField(
-                  onChanged: (value) {
-                    entry.moneyOut = double.tryParse(value) ?? 0;
-                    onChanged(entry);
-                  },
-                  hintText: '0.00',
-                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))],
-                  keyboardType: TextInputType.numberWithOptions(signed: false, decimal: true),
-                  isReadOnly: isInputLocked,
-                ),
+            ),
+            Expanded(
+              flex: 3,
+              child: InputField(
+                onChanged: (value) {
+                  entry.moneyOut = double.tryParse(value) ?? 0;
+                  onChanged(entry);
+                },
+                hintText: '0.00',
+                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))],
+                keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: true),
+                isReadOnly: isInputLocked,
               ),
-              Expanded(flex: 3, child: OutputField(value: entry.net.toStringAsFixed(2))),
-            ],
-          ),
+            ),
+            Expanded(flex: 3, child: OutputField(value: entry.net.toStringAsFixed(2))),
+          ],
         ),
       ),
     );
@@ -86,14 +85,40 @@ class PayoutOutputRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      spacing: 10,
-      children: [
-        Expanded(child: OutputField(value: transaction.from)),
-        Expanded(child: OutputField(value: transaction.to)),
-        Expanded(child: OutputField(value: transaction.amount.toStringAsFixed(2))),
-      ],
+    final scheme = Theme.of(context).colorScheme;
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        border: Border.all(color: scheme.onSurface.withValues(alpha: 0.15)),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              transaction.from,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Icon(Icons.arrow_forward, size: 16, color: scheme.onSurface.withValues(alpha: 0.45)),
+          ),
+          Expanded(
+            child: Text(
+              transaction.to,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
+          ),
+          Text(
+            transaction.amount.toStringAsFixed(2),
+            style: TextStyle(fontWeight: FontWeight.w700, color: scheme.primary),
+          ),
+        ],
+      ),
     );
   }
 }

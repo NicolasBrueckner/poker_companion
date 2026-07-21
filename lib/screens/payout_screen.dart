@@ -62,7 +62,7 @@ class _PayoutScreenState extends State<PayoutScreen> {
   void _onCalculatePressed() {
     final sum = _players.fold<double>(0, (sum, p) => sum + p.net);
     if (sum.abs() > 0.001) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Money In and out don\'t match')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Money in and out don\'t match')));
       return;
     }
     setState(() {
@@ -100,10 +100,11 @@ class _PayoutScreenState extends State<PayoutScreen> {
     return BaseScreen(
       title: 'Payout Calculator',
       child: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(vertical: 12),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            const _ColumnHeaders(),
             ...(_players.map(
               (p) => PayoutInputRow(
                 key: ObjectKey(p),
@@ -116,6 +117,7 @@ class _PayoutScreenState extends State<PayoutScreen> {
                 isInputLocked: _isCalculated,
               ),
             )),
+            const SizedBox(height: 8),
             _ConditionalSlice(
               condition: _isCalculated,
               onAddPressed: _onAddPressed,
@@ -126,6 +128,44 @@ class _PayoutScreenState extends State<PayoutScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _ColumnHeaders extends StatelessWidget {
+  const _ColumnHeaders();
+
+  @override
+  Widget build(BuildContext context) {
+    final style = TextStyle(
+      fontSize: 11,
+      fontWeight: FontWeight.w600,
+      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55),
+      letterSpacing: 0.5,
+    );
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(3, 0, 3, 2),
+      child: Row(
+        spacing: 5,
+        children: [
+          Expanded(
+            flex: 4,
+            child: Text('Player', style: style, textAlign: TextAlign.center),
+          ),
+          Expanded(
+            flex: 3,
+            child: Text('Buy In', style: style, textAlign: TextAlign.center),
+          ),
+          Expanded(
+            flex: 3,
+            child: Text('Cash Out', style: style, textAlign: TextAlign.center),
+          ),
+          Expanded(
+            flex: 3,
+            child: Text('Net', style: style, textAlign: TextAlign.center),
+          ),
+        ],
       ),
     );
   }
@@ -151,25 +191,29 @@ class _ConditionalSlice extends StatelessWidget {
   Widget build(BuildContext context) {
     if (!condition) {
       return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          BaseTextButton(label: '+', onPressed: onAddPressed),
+          BaseTextButton(label: '+ Add Player', onPressed: onAddPressed),
+          const SizedBox(height: 8),
           BaseTextButton(label: 'Calculate', onPressed: onCalculatePressed),
         ],
       );
     }
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Expanded(
               child: BaseTextButton(label: 'Edit', onPressed: onEditPressed),
             ),
+            const SizedBox(width: 8),
             Expanded(
               child: BaseTextButton(label: 'Save', onPressed: onSavePressed),
             ),
           ],
         ),
+        const SizedBox(height: 16),
         PayoutResult(transactions: transactions),
       ],
     );
@@ -182,18 +226,32 @@ class PayoutResult extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      spacing: 5,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(child: Text('From', textAlign: TextAlign.center)),
-            Expanded(child: Text('To', textAlign: TextAlign.center)),
-            Expanded(child: Text('Amount', textAlign: TextAlign.center)),
-          ],
+    if (transactions.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        child: Text(
+          'No settlements needed',
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)),
         ),
-        ...(transactions.map((r) => PayoutOutputRow(transaction: r))),
+      );
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Text(
+            'Settlements',
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+              color: Theme.of(context).colorScheme.onSurface,
+              letterSpacing: 0.5,
+            ),
+          ),
+        ),
+        ...transactions.map((r) => PayoutOutputRow(transaction: r)),
       ],
     );
   }

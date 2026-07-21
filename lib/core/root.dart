@@ -34,8 +34,7 @@ class _RootState extends State<Root> {
       child: MaterialApp(
         title: 'Poker Companion',
         theme: _theme,
-        home: const HomePage(title: 'home page'),
-        color: Colors.cyan,
+        home: const HomePage(title: 'Poker Companion'),
       ),
     );
   }

@@ -25,11 +25,38 @@ class StatisticsScreenState extends State<StatisticsScreen> {
     setState(() => _sessions = data);
   }
 
+  Future<void> _deleteSession(String id) async {
+    final sessions = await SessionUtility.load();
+    sessions.removeWhere((s) => s.id == id);
+    await SessionUtility.save(sessions);
+    setState(() => _sessions = sessions);
+  }
+
   @override
   Widget build(BuildContext context) {
     return BaseScreen(
       title: 'Statistics',
-      child: ListView(children: _sessions.map((s) => StatisticItem(info: s)).toList()),
+      child: _sessions.isEmpty
+          ? Center(
+              child: Text(
+                'No sessions saved yet',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.45),
+                ),
+              ),
+            )
+          : ListView.separated(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              itemCount: _sessions.length,
+              separatorBuilder: (_, _) => const SizedBox(height: 10),
+              itemBuilder: (_, i) {
+                final session = _sessions[_sessions.length - 1 - i];
+                return StatisticItem(
+                  info: session,
+                  onDelete: () => _deleteSession(session.id),
+                );
+              },
+            ),
     );
   }
 }
