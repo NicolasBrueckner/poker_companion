@@ -21,7 +21,7 @@ class HomePage extends StatelessWidget {
           const SuitsRowWidget(),
           const SizedBox(height: 40),
           BaseTextButton(
-            label: 'Payout Calculator',
+            label: 'Calculate',
             onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PayoutScreen())),
           ),
           const SizedBox(height: 12),

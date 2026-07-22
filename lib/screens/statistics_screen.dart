@@ -70,8 +70,8 @@ class SessionInfo {
   double get pot => table.fold<double>(0, (sum, p) => sum + p.moneyIn);
 
   Map<String, dynamic> toJSON() => {
-    'id': id as String? ?? DateTime.now().microsecondsSinceEpoch.toString(),
-    'date': date as String? ?? '',
+    'id': id,
+    'date': date,
     'pot': pot,
     'table': table.map((p) => p.toJSON()).toList(),
   };

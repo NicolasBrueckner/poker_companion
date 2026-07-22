@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:poker_companion/core/payout_data.dart';
 import 'package:poker_companion/widgets/text_fields.dart';
 
-class PayoutInputRow extends StatelessWidget {
+class PayoutInputRow extends StatefulWidget {
   const PayoutInputRow({
     super.key,
     required this.entry,
@@ -17,11 +17,17 @@ class PayoutInputRow extends StatelessWidget {
   final bool isInputLocked;
 
   @override
+  State<PayoutInputRow> createState() => _PayoutInputRowState();
+}
+
+class _PayoutInputRowState extends State<PayoutInputRow> {
+  @override
   Widget build(BuildContext context) {
+    final entry = widget.entry;
     return Dismissible(
       key: ValueKey(entry),
-      onDismissed: onDelete,
-      direction: DismissDirection.endToStart,
+      onDismissed: widget.onDelete,
+      direction: widget.isInputLocked ? DismissDirection.none : DismissDirection.endToStart,
       background: Container(
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 16),
@@ -38,9 +44,9 @@ class PayoutInputRow extends StatelessWidget {
               child: InputField(
                 onChanged: (value) {
                   entry.name = value;
-                  onChanged(entry);
+                  widget.onChanged(entry);
                 },
-                isReadOnly: isInputLocked,
+                isReadOnly: widget.isInputLocked,
                 maxLength: 12,
                 hintText: 'Name',
               ),
@@ -50,12 +56,13 @@ class PayoutInputRow extends StatelessWidget {
               child: InputField(
                 onChanged: (value) {
                   entry.moneyIn = double.tryParse(value) ?? 0;
-                  onChanged(entry);
+                  setState(() {});
+                  widget.onChanged(entry);
                 },
                 hintText: '0.00',
                 inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))],
                 keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: true),
-                isReadOnly: isInputLocked,
+                isReadOnly: widget.isInputLocked,
               ),
             ),
             Expanded(
@@ -63,12 +70,13 @@ class PayoutInputRow extends StatelessWidget {
               child: InputField(
                 onChanged: (value) {
                   entry.moneyOut = double.tryParse(value) ?? 0;
-                  onChanged(entry);
+                  setState(() {});
+                  widget.onChanged(entry);
                 },
                 hintText: '0.00',
                 inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))],
                 keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: true),
-                isReadOnly: isInputLocked,
+                isReadOnly: widget.isInputLocked,
               ),
             ),
             Expanded(flex: 3, child: OutputField(value: entry.net.toStringAsFixed(2))),

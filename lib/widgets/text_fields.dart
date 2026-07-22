@@ -5,14 +5,14 @@ class InputField extends StatelessWidget {
   const InputField({
     super.key,
     this.isReadOnly = false,
-    required this.onChanged,
+    this.onChanged,
     this.maxLength = 8,
     this.keyboardType = TextInputType.text,
     this.inputFormatters,
     this.hintText,
   });
   final bool isReadOnly;
-  final ValueChanged<String> onChanged;
+  final ValueChanged<String>? onChanged;
   final int maxLength;
   final TextInputType keyboardType;
   final List<TextInputFormatter>? inputFormatters;
@@ -34,15 +34,41 @@ class InputField extends StatelessWidget {
   }
 }
 
-class OutputField extends StatelessWidget {
+class OutputField extends StatefulWidget {
   const OutputField({super.key, required this.value});
   final String value;
 
   @override
+  State<OutputField> createState() => _OutputFieldState();
+}
+
+class _OutputFieldState extends State<OutputField> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.value);
+  }
+
+  @override
+  void didUpdateWidget(OutputField old) {
+    super.didUpdateWidget(old);
+    if (old.value != widget.value) {
+      _controller.text = widget.value;
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      key: ValueKey(value),
-      initialValue: value,
+    return TextField(
+      controller: _controller,
       readOnly: true,
       textAlignVertical: TextAlignVertical.center,
       textAlign: TextAlign.end,

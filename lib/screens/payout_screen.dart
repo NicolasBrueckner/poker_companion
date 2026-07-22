@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:poker_companion/core/main.dart';
 import 'package:poker_companion/core/payout_data.dart';
 import 'package:poker_companion/core/utility.dart';
 import 'package:poker_companion/screens/base_screen.dart';
@@ -16,7 +17,7 @@ class PayoutScreen extends StatefulWidget {
 }
 
 class _PayoutScreenState extends State<PayoutScreen> {
-  final List<PlayerEntry> _players = [PlayerEntry()];
+  final List<PlayerEntry> _players = List.generate(PrefValues.savedPlayerCount, (i) => PlayerEntry());
   final List<Transaction> _transactions = [];
   final SessionInfo _currentSession = SessionInfo(
     date: '${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}',
@@ -62,7 +63,14 @@ class _PayoutScreenState extends State<PayoutScreen> {
   void _onCalculatePressed() {
     final sum = _players.fold<double>(0, (sum, p) => sum + p.net);
     if (sum.abs() > 0.001) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Money in and out don\'t match')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Money out is ${sum.abs().toStringAsFixed(2)} '
+            '${sum < 0 ? 'short of' : 'over'} money in',
+          ),
+        ),
+      );
       return;
     }
     setState(() {
@@ -109,7 +117,7 @@ class _PayoutScreenState extends State<PayoutScreen> {
               (p) => PayoutInputRow(
                 key: ObjectKey(p),
                 entry: p,
-                onChanged: (_) => setState(() {}),
+                onChanged: (_) {},
                 onDelete: (_) {
                   _players.remove(p);
                   setState(() {});

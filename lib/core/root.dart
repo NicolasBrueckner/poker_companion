@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:poker_companion/core/main.dart';
 import 'package:poker_companion/core/themes.dart';
 import 'package:poker_companion/core/utility.dart';
 import 'package:poker_companion/screens/home_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Root extends StatefulWidget {
-  const Root({super.key, required this.initThemeKey});
-  final String initThemeKey;
+  const Root({super.key});
 
   @override
   State<Root> createState() => _RootState();
 }
 
 class _RootState extends State<Root> {
-  late String _activeTheme = widget.initThemeKey;
+  late String _activeTheme = PrefValues.savedThemeId;
   late ThemeData _theme = AppTheme.themeFor(_activeTheme);
 
   Future<void> setTheme(String id) async {
@@ -21,8 +20,7 @@ class _RootState extends State<Root> {
       _activeTheme = id;
       _theme = AppTheme.themeFor(id);
     });
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('themeID', id);
+    PrefValues.savedThemeId = id;
   }
 
   // root
