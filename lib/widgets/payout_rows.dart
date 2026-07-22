@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:poker_companion/core/payout_data.dart';
+import 'package:poker_companion/core/utility.dart';
 import 'package:poker_companion/widgets/text_fields.dart';
 
 class PayoutInputRow extends StatefulWidget {
@@ -21,9 +22,11 @@ class PayoutInputRow extends StatefulWidget {
 }
 
 class _PayoutInputRowState extends State<PayoutInputRow> {
+  static final decimalRegExp = RegExp(r'^\d*\.?\d{0,2}');
   @override
   Widget build(BuildContext context) {
     final entry = widget.entry;
+    final scheme = ThemeController.of(context).colorScheme;
     return Dismissible(
       key: ValueKey(entry),
       onDismissed: widget.onDelete,
@@ -31,8 +34,8 @@ class _PayoutInputRowState extends State<PayoutInputRow> {
       background: Container(
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 16),
-        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.12),
-        child: Icon(Icons.delete_outline, color: Theme.of(context).colorScheme.primary),
+        color: scheme.primary.withValues(alpha: 0.12),
+        child: Icon(Icons.delete_outline, color: scheme.primary),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 3),
@@ -55,12 +58,11 @@ class _PayoutInputRowState extends State<PayoutInputRow> {
               flex: 3,
               child: InputField(
                 onChanged: (value) {
-                  entry.moneyIn = double.tryParse(value) ?? 0;
-                  setState(() {});
+                  setState(() => entry.moneyIn = double.tryParse(value) ?? 0);
                   widget.onChanged(entry);
                 },
                 hintText: '0.00',
-                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))],
+                inputFormatters: [FilteringTextInputFormatter.allow(decimalRegExp)],
                 keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: true),
                 isReadOnly: widget.isInputLocked,
               ),
@@ -69,12 +71,11 @@ class _PayoutInputRowState extends State<PayoutInputRow> {
               flex: 3,
               child: InputField(
                 onChanged: (value) {
-                  entry.moneyOut = double.tryParse(value) ?? 0;
-                  setState(() {});
+                  setState(() => entry.moneyOut = double.tryParse(value) ?? 0);
                   widget.onChanged(entry);
                 },
                 hintText: '0.00',
-                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))],
+                inputFormatters: [FilteringTextInputFormatter.allow(decimalRegExp)],
                 keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: true),
                 isReadOnly: widget.isInputLocked,
               ),
@@ -93,7 +94,7 @@ class PayoutOutputRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
+    final scheme = ThemeController.of(context).colorScheme;
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),

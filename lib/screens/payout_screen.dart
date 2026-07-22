@@ -145,10 +145,11 @@ class _ColumnHeaders extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = ThemeController.of(context).colorScheme;
     final style = TextStyle(
       fontSize: 11,
       fontWeight: FontWeight.w600,
-      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55),
+      color: scheme.onSurface.withValues(alpha: 0.55),
       letterSpacing: 0.5,
     );
     return Padding(
@@ -233,13 +234,14 @@ class PayoutResult extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = ThemeController.of(context).colorScheme;
     if (transactions.isEmpty) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 16),
         child: Text(
           'No settlements needed',
           textAlign: TextAlign.center,
-          style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)),
+          style: TextStyle(color: scheme.onSurface.withValues(alpha: 0.5)),
         ),
       );
     }
@@ -253,7 +255,7 @@ class PayoutResult extends StatelessWidget {
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w700,
-              color: Theme.of(context).colorScheme.onSurface,
+              color: scheme.onSurface,
               letterSpacing: 0.5,
             ),
           ),

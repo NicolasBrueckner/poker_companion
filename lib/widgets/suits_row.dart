@@ -15,7 +15,7 @@ class _SuitsRowWidgetState extends State<SuitsRowWidget> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final scheme = Theme.of(context).colorScheme;
+    final scheme = ThemeController.of(context).colorScheme;
     _mapper = OutlineMapper(scheme.onSurface, scheme.primary);
   }
 
@@ -28,10 +28,7 @@ class _SuitsRowWidgetState extends State<SuitsRowWidget> {
           for (final suit in ['club', 'heart', 'spade', 'diamond'])
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 6),
-              child: SvgPicture.asset(
-                'assets/playing-cards/suits/$suit.svg',
-                colorMapper: _mapper,
-              ),
+              child: SvgPicture.asset('assets/playing-cards/suits/$suit.svg', colorMapper: _mapper),
             ),
         ],
       ),

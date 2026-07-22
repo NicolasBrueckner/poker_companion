@@ -29,8 +29,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-
+    final scheme = ThemeController.of(context).colorScheme;
     return BaseScreen(
       title: 'Settings',
       child: SingleChildScrollView(
@@ -53,7 +52,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                _StepButton(icon: Icons.remove, onPressed: _playerCount > 1 ? _decrement : null, scheme: scheme),
+                _StepButton(icon: Icons.remove, onPressed: _playerCount > 1 ? _decrement : null),
                 const SizedBox(width: 4),
                 Container(
                   width: 48,
@@ -64,7 +63,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ),
                 const SizedBox(width: 4),
-                _StepButton(icon: Icons.add, onPressed: _increment, scheme: scheme),
+                _StepButton(icon: Icons.add, onPressed: _increment),
               ],
             ),
           ],
@@ -75,14 +74,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
 }
 
 class _StepButton extends StatelessWidget {
-  const _StepButton({required this.icon, required this.onPressed, required this.scheme});
+  const _StepButton({required this.icon, required this.onPressed});
   final IconData icon;
   final VoidCallback? onPressed;
-  final ColorScheme scheme;
 
   @override
   Widget build(BuildContext context) {
     final enabled = onPressed != null;
+    final scheme = ThemeController.of(context).colorScheme;
     return GestureDetector(
       onTap: onPressed,
       child: AnimatedContainer(
@@ -93,7 +92,11 @@ class _StepButton extends StatelessWidget {
           color: enabled ? scheme.primary : scheme.onSurface.withValues(alpha: 0.08),
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Icon(icon, size: 20, color: enabled ? scheme.onPrimary : scheme.onSurface.withValues(alpha: 0.3)),
+        child: Icon(
+          icon,
+          size: 20,
+          color: enabled ? scheme.onPrimary : scheme.onSurface.withValues(alpha: 0.3),
+        ),
       ),
     );
   }

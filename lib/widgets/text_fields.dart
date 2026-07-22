@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:poker_companion/core/utility.dart';
 
 class InputField extends StatelessWidget {
   const InputField({
@@ -20,7 +21,7 @@ class InputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ColorScheme scheme = Theme.of(context).colorScheme;
+    final scheme = ThemeController.of(context).colorScheme;
     return TextField(
       readOnly: isReadOnly,
       onChanged: onChanged,
@@ -67,12 +68,13 @@ class _OutputFieldState extends State<OutputField> {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = ThemeController.of(context).colorScheme;
     return TextField(
       controller: _controller,
       readOnly: true,
       textAlignVertical: TextAlignVertical.center,
       textAlign: TextAlign.end,
-      decoration: _payoutFieldDecoration(scheme: Theme.of(context).colorScheme, isReadOnly: true, hintText: '0.00'),
+      decoration: _payoutFieldDecoration(scheme: scheme, isReadOnly: true, hintText: '0.00'),
     );
   }
 }

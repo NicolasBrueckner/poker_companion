@@ -34,15 +34,14 @@ class StatisticsScreenState extends State<StatisticsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = ThemeController.of(context).colorScheme;
     return BaseScreen(
       title: 'Statistics',
       child: _sessions.isEmpty
           ? Center(
               child: Text(
                 'No sessions saved yet',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.45),
-                ),
+                style: TextStyle(color: scheme.onSurface.withValues(alpha: 0.45)),
               ),
             )
           : ListView.separated(
@@ -51,10 +50,7 @@ class StatisticsScreenState extends State<StatisticsScreen> {
               separatorBuilder: (_, _) => const SizedBox(height: 10),
               itemBuilder: (_, i) {
                 final session = _sessions[_sessions.length - 1 - i];
-                return StatisticItem(
-                  info: session,
-                  onDelete: () => _deleteSession(session.id),
-                );
+                return StatisticItem(info: session, onDelete: () => _deleteSession(session.id));
               },
             ),
     );
@@ -69,12 +65,7 @@ class SessionInfo {
   List<PlayerEntry> table;
   double get pot => table.fold<double>(0, (sum, p) => sum + p.moneyIn);
 
-  Map<String, dynamic> toJSON() => {
-    'id': id,
-    'date': date,
-    'pot': pot,
-    'table': table.map((p) => p.toJSON()).toList(),
-  };
+  Map<String, dynamic> toJSON() => {'id': id, 'date': date, 'pot': pot, 'table': table.map((p) => p.toJSON()).toList()};
 
   SessionInfo.fromJSON(Map<String, dynamic> j)
     : id = j['id'] ?? DateTime.now().microsecondsSinceEpoch.toString(),

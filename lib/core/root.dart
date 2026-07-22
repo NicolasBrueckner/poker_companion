@@ -28,6 +28,7 @@ class _RootState extends State<Root> {
     return ThemeController(
       setTheme: setTheme,
       activeTheme: _activeTheme,
+      colorScheme: Theme.of(context).colorScheme,
       child: MaterialApp(
         title: 'Poker Companion',
         theme: _theme,

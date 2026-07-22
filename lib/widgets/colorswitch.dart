@@ -7,8 +7,8 @@ class ColorSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String activeKey = ThemeController.of(context).activeTheme;
-    final scheme = Theme.of(context).colorScheme;
+    final String activeKey = PrefValues.savedThemeId;
+    final scheme = ThemeController.of(context).colorScheme;
 
     final lightEntries = globalColorSchemes.entries
         .where((e) => e.key != 'default' && e.value.$4 == Brightness.light)

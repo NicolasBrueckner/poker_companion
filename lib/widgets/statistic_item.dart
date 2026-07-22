@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:poker_companion/core/payout_data.dart';
+import 'package:poker_companion/core/utility.dart';
 import 'package:poker_companion/screens/statistics_screen.dart';
 
 class StatisticItem extends StatelessWidget {
@@ -9,7 +10,7 @@ class StatisticItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
+    final scheme = ThemeController.of(context).colorScheme;
     return Dismissible(
       key: ValueKey(info.id),
       direction: DismissDirection.endToStart,
@@ -19,14 +20,8 @@ class StatisticItem extends StatelessWidget {
           title: const Text('Delete session?'),
           content: const Text('This session will be permanently removed.'),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.of(ctx).pop(false),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(ctx).pop(true),
-              child: const Text('Delete'),
-            ),
+            TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: const Text('Cancel')),
+            TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: const Text('Delete')),
           ],
         ),
       ),
@@ -49,13 +44,13 @@ class StatisticItem extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _SessionHeader(info: info, scheme: scheme),
+            _SessionHeader(info: info),
             const SizedBox(height: 8),
             Divider(height: 1, color: scheme.onSurface.withValues(alpha: 0.1)),
             const SizedBox(height: 8),
-            _TableHeaders(scheme: scheme),
+            _TableHeaders(),
             const SizedBox(height: 2),
-            ...info.table.map((entry) => _PlayerRow(entry: entry, scheme: scheme)),
+            ...info.table.map((entry) => _PlayerRow(entry: entry)),
           ],
         ),
       ),
@@ -64,19 +59,16 @@ class StatisticItem extends StatelessWidget {
 }
 
 class _SessionHeader extends StatelessWidget {
-  const _SessionHeader({required this.info, required this.scheme});
+  const _SessionHeader({required this.info});
   final SessionInfo info;
-  final ColorScheme scheme;
 
   @override
   Widget build(BuildContext context) {
+    final scheme = ThemeController.of(context).colorScheme;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          info.date,
-          style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
-        ),
+        Text(info.date, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
         Text(
           'Pot  ${info.pot.toStringAsFixed(2)}',
           style: TextStyle(
@@ -91,11 +83,9 @@ class _SessionHeader extends StatelessWidget {
 }
 
 class _TableHeaders extends StatelessWidget {
-  const _TableHeaders({required this.scheme});
-  final ColorScheme scheme;
-
   @override
   Widget build(BuildContext context) {
+    final scheme = ThemeController.of(context).colorScheme;
     final style = TextStyle(
       fontSize: 11,
       fontWeight: FontWeight.w600,
@@ -105,21 +95,30 @@ class _TableHeaders extends StatelessWidget {
     return Row(
       children: [
         Expanded(flex: 4, child: Text('Player', style: style)),
-        Expanded(flex: 3, child: Text('Buy In', style: style, textAlign: TextAlign.right)),
-        Expanded(flex: 3, child: Text('Cash Out', style: style, textAlign: TextAlign.right)),
-        Expanded(flex: 3, child: Text('Net', style: style, textAlign: TextAlign.right)),
+        Expanded(
+          flex: 3,
+          child: Text('Buy In', style: style, textAlign: TextAlign.right),
+        ),
+        Expanded(
+          flex: 3,
+          child: Text('Cash Out', style: style, textAlign: TextAlign.right),
+        ),
+        Expanded(
+          flex: 3,
+          child: Text('Net', style: style, textAlign: TextAlign.right),
+        ),
       ],
     );
   }
 }
 
 class _PlayerRow extends StatelessWidget {
-  const _PlayerRow({required this.entry, required this.scheme});
+  const _PlayerRow({required this.entry});
   final PlayerEntry entry;
-  final ColorScheme scheme;
 
   @override
   Widget build(BuildContext context) {
+    final scheme = ThemeController.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3),
       child: Row(

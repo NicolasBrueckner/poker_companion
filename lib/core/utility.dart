@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:path_provider/path_provider.dart';
 import 'package:poker_companion/screens/statistics_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,15 +25,23 @@ class OutlineMapper extends ColorMapper {
 }
 
 class ThemeController extends InheritedWidget {
-  const ThemeController({super.key, required this.setTheme, required this.activeTheme, required super.child});
+  const ThemeController({
+    super.key,
+    required this.setTheme,
+    required this.activeTheme,
+    required this.colorScheme,
+    required super.child,
+  });
 
   final void Function(String) setTheme;
   final String activeTheme;
+  final ColorScheme colorScheme;
 
   static ThemeController of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<ThemeController>()!;
 
   @override
-  bool updateShouldNotify(ThemeController old) => activeTheme != old.activeTheme;
+  bool updateShouldNotify(ThemeController old) =>
+      activeTheme != old.activeTheme || colorScheme != old.colorScheme;
 }
 
 class SessionUtility {

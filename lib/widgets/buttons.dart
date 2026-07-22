@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:poker_companion/core/utility.dart';
 
 class BaseTextButton extends StatelessWidget {
   const BaseTextButton({super.key, required this.label, this.onPressed});
@@ -9,7 +10,7 @@ class BaseTextButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: onPressed,
-      style: _buttonStyle(Theme.of(context).colorScheme),
+      style: _buttonStyle(ThemeController.of(context).colorScheme),
       child: Text(label, textScaler: TextScaler.linear(1.7)),
     );
   }
@@ -21,7 +22,7 @@ class BaseIconButton extends StatelessWidget {
   final VoidCallback? onPressed;
   @override
   Widget build(BuildContext context) {
-    return IconButton(onPressed: onPressed, style: _buttonStyle(Theme.of(context).colorScheme), icon: icon);
+    return IconButton(onPressed: onPressed, style: _buttonStyle(ThemeController.of(context).colorScheme), icon: icon);
   }
 }
 
@@ -36,21 +37,15 @@ ButtonStyle _buttonStyle(ColorScheme scheme) {
     padding: WidgetStateProperty.resolveWith<EdgeInsetsGeometry>((states) => EdgeInsets.all(12)),
     alignment: Alignment.center,
     backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
-      if (states.contains(WidgetState.pressed)) {
-        return scheme.primary;
-      }
+      if (states.contains(WidgetState.pressed)) return scheme.primary;
       return scheme.surface;
     }),
     foregroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
-      if (states.contains(WidgetState.pressed)) {
-        return scheme.surface;
-      }
+      if (states.contains(WidgetState.pressed)) return scheme.surface;
       return scheme.onSurface;
     }),
     side: WidgetStateProperty.resolveWith<BorderSide?>((states) {
-      if (states.contains(WidgetState.pressed)) {
-        return baseSide.copyWith(color: scheme.primary);
-      }
+      if (states.contains(WidgetState.pressed)) return baseSide.copyWith(color: scheme.primary);
       return baseSide.copyWith(color: scheme.onSurface);
     }),
   );
