@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:poker_companion/core/main.dart';
 import 'package:poker_companion/core/payout_data.dart';
 import 'package:poker_companion/core/utility.dart';
 import 'package:poker_companion/screens/base_screen.dart';

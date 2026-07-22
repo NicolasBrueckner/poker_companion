@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:poker_companion/core/main.dart';
 import 'package:poker_companion/core/themes.dart';
 import 'package:poker_companion/core/utility.dart';
 import 'package:poker_companion/screens/home_screen.dart';
