@@ -18,10 +18,11 @@ class SessionScreen extends StatefulWidget {
 class _SessionScreenState extends State<SessionScreen> {
   final List<PlayerEntry> _players = List.generate(PrefValues.savedPlayerCount, (i) => PlayerEntry());
   final List<Transaction> _transactions = [];
-  final SessionInfo _currentSession = SessionInfo(
+  final HistoryData _currentSession = HistoryData(
     date: '${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}',
     table: [],
   );
+  final Preset _currentPreset = Preset(names: [], moneyIns: []);
   bool _isCalculated = false;
 
   void _calculateTransactions() {
@@ -93,7 +94,7 @@ class _SessionScreenState extends State<SessionScreen> {
   }
 
   Future<void> _saveSession() async {
-    final sessions = await SessionUtility.load();
+    final sessions = await HistoryUtility.load();
     _currentSession.table = _players.map((p) => p.copy()).toList();
     final i = sessions.indexWhere((s) => s.id == _currentSession.id);
     if (i >= 0) {
@@ -101,13 +102,48 @@ class _SessionScreenState extends State<SessionScreen> {
     } else {
       sessions.add(_currentSession);
     }
-    await SessionUtility.save(sessions);
+    await HistoryUtility.save(sessions);
+  }
+
+  Future<void> _onLoadPresets() async {
+    final List<Preset> presets = await SessionUtility.load();
+    final choice = await showModalBottomSheet(
+      context: context,
+      builder: (context) =>
+          ListView(shrinkWrap: true, children: presets.map((p) => ListTile(title: Text(p.id))).toList()),
+    );
+
+    if (choice == null) return;
+    setState() {}
+  }
+
+  Future<void> _onSavePresets() async {
+    final List<Preset> presets = await SessionUtility.load();
+    _currentPreset.names = _players.map((p) => p.name).toList();
+    _currentPreset.moneyIns = _players.map((p) => p.moneyIn).toList();
+    final i = presets.indexWhere((s) => s.id == _currentPreset.id);
+    if (i >= 0) {
+      presets[i] = _currentPreset;
+    } else {
+      presets.add(_currentPreset);
+    }
+    await SessionUtility.save(presets);
   }
 
   @override
   Widget build(BuildContext context) {
     return BaseScreen(
       title: 'New Session',
+      actions: [
+        PopupMenuButton(
+          itemBuilder: (context) => [
+            PopupMenuItem(child: Text('delete')),
+            PopupMenuItem(onTap: _onSavePresets, child: Text('save')),
+            PopupMenuItem(onTap: _onLoadPresets, child: Text('load')),
+          ],
+          icon: Icon(Icons.settings),
+        ),
+      ],
       child: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 12),
         child: Column(

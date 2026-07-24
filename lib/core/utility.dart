@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:path_provider/path_provider.dart';
+import 'package:poker_companion/core/payout_data.dart';
 import 'package:poker_companion/screens/history_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -43,28 +44,53 @@ class ThemeController extends InheritedWidget {
   bool updateShouldNotify(ThemeController old) => activeTheme != old.activeTheme || colorScheme != old.colorScheme;
 }
 
-class SessionUtility {
+class HistoryUtility {
   static Future<File> _file() async {
     final dir = await getApplicationDocumentsDirectory();
-    return File('${dir.path}/sessions.json');
+    return File('${dir.path}/history.json');
   }
 
-  static Future<void> save(List<SessionInfo> sessions) async {
+  static Future<void> save(List<HistoryData> sessions) async {
     final file = await _file();
     await file.writeAsString(jsonEncode(sessions.map((s) => s.toJSON()).toList()));
   }
 
-  static Future<List<SessionInfo>> load() async {
+  static Future<List<HistoryData>> load() async {
     final file = await _file();
     if (!await file.exists()) return [];
     final data = jsonDecode(await file.readAsString()) as List<dynamic>;
-    return data.map((j) => SessionInfo.fromJSON(j)).toList();
+    return data.map((j) => HistoryData.fromJSON(j)).toList();
   }
 
   static Future<void> clear() async {
-    List<SessionInfo> sessions = await load();
+    List<HistoryData> sessions = await load();
     sessions.clear();
     save(sessions);
+  }
+}
+
+class SessionUtility {
+  static Future<File> _file() async {
+    final dir = await getApplicationDocumentsDirectory();
+    return File('${dir.path}/presets');
+  }
+
+  static Future<void> save(List<Preset> presets) async {
+    final file = await _file();
+    await file.writeAsString(jsonEncode(presets.map((p) => p.toJSON()).toList()));
+  }
+
+  static Future<List<Preset>> load() async {
+    final file = await _file();
+    if (!await file.exists()) return [];
+    final data = jsonDecode(await file.readAsString()) as List<dynamic>;
+    return data.map((j) => Preset.fromJSON(j)).toList();
+  }
+
+  static Future<void> clear() async {
+    List<Preset> presets = await load();
+    presets.clear();
+    save(presets);
   }
 }
 

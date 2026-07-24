@@ -12,7 +12,7 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
-  List<SessionInfo> _sessions = [];
+  List<HistoryData> _sessions = [];
 
   @override
   void initState() {
@@ -21,14 +21,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   Future<void> _loadSessions() async {
-    final data = await SessionUtility.load();
+    final data = await HistoryUtility.load();
     setState(() => _sessions = data);
   }
 
   Future<void> _deleteSession(String id) async {
-    final sessions = await SessionUtility.load();
+    final sessions = await HistoryUtility.load();
     sessions.removeWhere((s) => s.id == id);
-    await SessionUtility.save(sessions);
+    await HistoryUtility.save(sessions);
     setState(() => _sessions = sessions);
   }
 
@@ -54,8 +54,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 }
 
-class SessionInfo {
-  SessionInfo({String? id, required this.date, required this.table})
+class HistoryData {
+  HistoryData({String? id, required this.date, required this.table})
     : id = id ?? DateTime.now().microsecondsSinceEpoch.toString();
   final String id;
   final String date;
@@ -64,7 +64,7 @@ class SessionInfo {
 
   Map<String, dynamic> toJSON() => {'id': id, 'date': date, 'pot': pot, 'table': table.map((p) => p.toJSON()).toList()};
 
-  SessionInfo.fromJSON(Map<String, dynamic> j)
+  HistoryData.fromJSON(Map<String, dynamic> j)
     : id = j['id'] ?? DateTime.now().microsecondsSinceEpoch.toString(),
       date = j['date'] ?? '',
       table = (j['table'] as List).map((e) => PlayerEntry.fromJSON(e)).toList();

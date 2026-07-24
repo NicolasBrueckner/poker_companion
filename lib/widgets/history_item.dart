@@ -5,7 +5,7 @@ import 'package:poker_companion/screens/history_screen.dart';
 
 class StatisticItem extends StatelessWidget {
   const StatisticItem({super.key, required this.info, required this.onDelete});
-  final SessionInfo info;
+  final HistoryData info;
   final VoidCallback onDelete;
 
   @override
@@ -60,7 +60,7 @@ class StatisticItem extends StatelessWidget {
 
 class _SessionHeader extends StatelessWidget {
   const _SessionHeader({required this.info});
-  final SessionInfo info;
+  final HistoryData info;
 
   @override
   Widget build(BuildContext context) {

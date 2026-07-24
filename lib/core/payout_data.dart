@@ -28,3 +28,19 @@ class Transaction {
   String to;
   double amount;
 }
+
+class Preset {
+  Preset({String? id, required this.names, required this.moneyIns})
+    : id = id ?? DateTime.now().microsecondsSinceEpoch.toString();
+
+  final String id;
+  List<String> names;
+  List<double> moneyIns;
+
+  Map<String, dynamic> toJSON() => {'id': id, 'names': names, 'moneyIns': moneyIns};
+
+  Preset.fromJSON(Map<String, dynamic> j)
+    : id = j['id'] ?? DateTime.now().microsecondsSinceEpoch.toString(),
+      names = List<String>.from(j['names']),
+      moneyIns = (j['moneyIns'] as List).map((m) => (m as num).toDouble()).toList();
+}
