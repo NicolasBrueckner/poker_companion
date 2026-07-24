@@ -60,18 +60,20 @@ class _SessionScreenState extends State<SessionScreen> {
   }
 
   void _onCalculatePressed() {
-    final sum = _players.fold<double>(0, (sum, p) => sum + p.net);
-    if (sum.abs() > 0.001) {
+    final sumIn = _players.fold<double>(0, (sum, p) => sum + p.moneyIn);
+    final sumOut = _players.fold<double>(0, (sum, p) => sum + p.moneyOut);
+
+    FocusManager.instance.primaryFocus?.unfocus();
+
+    if (sumIn.abs() > 0.001) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            'Money out is ${sum.abs().toStringAsFixed(2)} '
-            '${sum < 0 ? 'short of' : 'over'} money in',
-          ),
+          content: Text('Totals don\'t match - in: ${sumIn.toStringAsFixed(2)}, out: ${sumOut.toStringAsFixed(2)}'),
         ),
       );
       return;
     }
+
     setState(() {
       _isCalculated = true;
       _calculateTransactions();
