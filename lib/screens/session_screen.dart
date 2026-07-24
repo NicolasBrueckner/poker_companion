@@ -4,18 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:poker_companion/core/payout_data.dart';
 import 'package:poker_companion/core/utility.dart';
 import 'package:poker_companion/screens/base_screen.dart';
-import 'package:poker_companion/screens/statistics_screen.dart';
+import 'package:poker_companion/screens/history_screen.dart';
 import 'package:poker_companion/widgets/buttons.dart';
-import 'package:poker_companion/widgets/payout_rows.dart';
+import 'package:poker_companion/widgets/session_rows.dart';
 
-class PayoutScreen extends StatefulWidget {
-  const PayoutScreen({super.key});
+class SessionScreen extends StatefulWidget {
+  const SessionScreen({super.key});
 
   @override
-  State<StatefulWidget> createState() => _PayoutScreenState();
+  State<StatefulWidget> createState() => _SessionScreenState();
 }
 
-class _PayoutScreenState extends State<PayoutScreen> {
+class _SessionScreenState extends State<SessionScreen> {
   final List<PlayerEntry> _players = List.generate(PrefValues.savedPlayerCount, (i) => PlayerEntry());
   final List<Transaction> _transactions = [];
   final SessionInfo _currentSession = SessionInfo(
@@ -105,7 +105,7 @@ class _PayoutScreenState extends State<PayoutScreen> {
   @override
   Widget build(BuildContext context) {
     return BaseScreen(
-      title: 'Payout Calculator',
+      title: 'New Session',
       child: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 12),
         child: Column(
@@ -252,12 +252,7 @@ class PayoutResult extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 8),
           child: Text(
             'Settlements',
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w700,
-              color: scheme.onSurface,
-              letterSpacing: 0.5,
-            ),
+            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: scheme.onSurface, letterSpacing: 0.5),
           ),
         ),
         ...transactions.map((r) => PayoutOutputRow(transaction: r)),

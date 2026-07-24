@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:path_provider/path_provider.dart';
-import 'package:poker_companion/screens/statistics_screen.dart';
+import 'package:poker_companion/screens/history_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OutlineMapper extends ColorMapper {
@@ -40,8 +40,7 @@ class ThemeController extends InheritedWidget {
   static ThemeController of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<ThemeController>()!;
 
   @override
-  bool updateShouldNotify(ThemeController old) =>
-      activeTheme != old.activeTheme || colorScheme != old.colorScheme;
+  bool updateShouldNotify(ThemeController old) => activeTheme != old.activeTheme || colorScheme != old.colorScheme;
 }
 
 class SessionUtility {

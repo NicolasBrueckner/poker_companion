@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:poker_companion/core/payout_data.dart';
 import 'package:poker_companion/core/utility.dart';
-import 'package:poker_companion/screens/statistics_screen.dart';
+import 'package:poker_companion/screens/history_screen.dart';
 
 class StatisticItem extends StatelessWidget {
   const StatisticItem({super.key, required this.info, required this.onDelete});
@@ -71,11 +71,7 @@ class _SessionHeader extends StatelessWidget {
         Text(info.date, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
         Text(
           'Pot  ${info.pot.toStringAsFixed(2)}',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 13,
-            color: scheme.onSurface.withValues(alpha: 0.55),
-          ),
+          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: scheme.onSurface.withValues(alpha: 0.55)),
         ),
       ],
     );
@@ -152,10 +148,7 @@ class _PlayerRow extends StatelessWidget {
             child: Text(
               '${entry.net > 0 ? '+' : ''}${entry.net.toStringAsFixed(2)}',
               textAlign: TextAlign.right,
-              style: TextStyle(
-                fontWeight: FontWeight.w700,
-                color: entry.net > 0 ? scheme.primary : scheme.onSurface,
-              ),
+              style: TextStyle(fontWeight: FontWeight.w700, color: entry.net > 0 ? scheme.primary : scheme.onSurface),
             ),
           ),
         ],

@@ -9,21 +9,21 @@
             "name": "flutter_application_1",
             "request": "launch",
             "type": "dart",
-            "program": "lib/core/main.dart"
+            "program": "lib/main.dart"
         },
         {
             "name": "flutter_application_1 (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile",
-            "program": "lib/core/main.dart"
+            "program": "lib/main.dart"
         },
         {
             "name": "flutter_application_1 (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release",
-            "program": "lib/core/main.dart"
+            "program": "lib/main.dart"
         }
     ]
 }

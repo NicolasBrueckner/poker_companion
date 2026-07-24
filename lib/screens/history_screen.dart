@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:poker_companion/core/payout_data.dart';
 import 'package:poker_companion/core/utility.dart';
 import 'package:poker_companion/screens/base_screen.dart';
-import 'package:poker_companion/widgets/statistic_item.dart';
+import 'package:poker_companion/widgets/history_item.dart';
 
-class StatisticsScreen extends StatefulWidget {
-  const StatisticsScreen({super.key});
+class HistoryScreen extends StatefulWidget {
+  const HistoryScreen({super.key});
 
   @override
-  State<StatefulWidget> createState() => StatisticsScreenState();
+  State<StatefulWidget> createState() => _HistoryScreenState();
 }
 
-class StatisticsScreenState extends State<StatisticsScreen> {
+class _HistoryScreenState extends State<HistoryScreen> {
   List<SessionInfo> _sessions = [];
 
   @override
@@ -36,13 +36,10 @@ class StatisticsScreenState extends State<StatisticsScreen> {
   Widget build(BuildContext context) {
     final scheme = ThemeController.of(context).colorScheme;
     return BaseScreen(
-      title: 'Statistics',
+      title: 'History',
       child: _sessions.isEmpty
           ? Center(
-              child: Text(
-                'No sessions saved yet',
-                style: TextStyle(color: scheme.onSurface.withValues(alpha: 0.45)),
-              ),
+              child: Text('No sessions saved yet', style: TextStyle(color: scheme.onSurface.withValues(alpha: 0.45))),
             )
           : ListView.separated(
               padding: const EdgeInsets.symmetric(vertical: 12),

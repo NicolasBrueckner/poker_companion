@@ -28,11 +28,11 @@ class _RootState extends State<Root> {
     return ThemeController(
       setTheme: setTheme,
       activeTheme: _activeTheme,
-      colorScheme: Theme.of(context).colorScheme,
+      colorScheme: _theme.colorScheme,
       child: MaterialApp(
-        title: 'Poker Companion',
+        title: 'Poker Payout Calculator',
         theme: _theme,
-        home: const HomePage(title: 'Poker Companion'),
+        home: const HomePage(title: 'Poker Payout Calculator'),
       ),
     );
   }
