@@ -44,11 +44,15 @@ class ThemeController extends InheritedWidget {
   bool updateShouldNotify(ThemeController old) => activeTheme != old.activeTheme || colorScheme != old.colorScheme;
 }
 
+Future<File> _appDataFile(String fileName) async {
+  final docsDir = await getApplicationDocumentsDirectory();
+  final appDir = Directory('${docsDir.path}/PokerPayoutCalculator');
+  await appDir.create(recursive: true);
+  return File('${appDir.path}/$fileName');
+}
+
 class HistoryUtility {
-  static Future<File> _file() async {
-    final dir = await getApplicationDocumentsDirectory();
-    return File('${dir.path}/history.json');
-  }
+  static Future<File> _file() => _appDataFile('history.json');
 
   static Future<void> save(List<HistoryData> sessions) async {
     final file = await _file();
@@ -58,8 +62,12 @@ class HistoryUtility {
   static Future<List<HistoryData>> load() async {
     final file = await _file();
     if (!await file.exists()) return [];
-    final data = jsonDecode(await file.readAsString()) as List<dynamic>;
-    return data.map((j) => HistoryData.fromJSON(j)).toList();
+    try {
+      final data = jsonDecode(await file.readAsString()) as List<dynamic>;
+      return data.map((j) => HistoryData.fromJSON(j)).toList();
+    } catch (_) {
+      return [];
+    }
   }
 
   static Future<void> clear() async {
@@ -70,10 +78,7 @@ class HistoryUtility {
 }
 
 class SessionUtility {
-  static Future<File> _file() async {
-    final dir = await getApplicationDocumentsDirectory();
-    return File('${dir.path}/presets');
-  }
+  static Future<File> _file() => _appDataFile('presets');
 
   static Future<void> save(List<Preset> presets) async {
     final file = await _file();
@@ -83,8 +88,12 @@ class SessionUtility {
   static Future<List<Preset>> load() async {
     final file = await _file();
     if (!await file.exists()) return [];
-    final data = jsonDecode(await file.readAsString()) as List<dynamic>;
-    return data.map((j) => Preset.fromJSON(j)).toList();
+    try {
+      final data = jsonDecode(await file.readAsString()) as List<dynamic>;
+      return data.map((j) => Preset.fromJSON(j)).toList();
+    } catch (_) {
+      return [];
+    }
   }
 
   static Future<void> clear() async {

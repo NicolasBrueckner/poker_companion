@@ -6,6 +6,7 @@ import 'package:poker_companion/core/utility.dart';
 import 'package:poker_companion/screens/base_screen.dart';
 import 'package:poker_companion/screens/history_screen.dart';
 import 'package:poker_companion/widgets/buttons.dart';
+import 'package:poker_companion/widgets/preset_sheet.dart';
 import 'package:poker_companion/widgets/session_rows.dart';
 
 class SessionScreen extends StatefulWidget {
@@ -22,7 +23,7 @@ class _SessionScreenState extends State<SessionScreen> {
     date: '${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}',
     table: [],
   );
-  final Preset _currentPreset = Preset(names: [], moneyIns: []);
+  Preset _currentPreset = Preset(names: [], moneyIns: []);
   bool _isCalculated = false;
 
   void _calculateTransactions() {
@@ -106,19 +107,47 @@ class _SessionScreenState extends State<SessionScreen> {
   }
 
   Future<void> _onLoadPresets() async {
-    final List<Preset> presets = await SessionUtility.load();
-    final choice = await showModalBottomSheet(
-      context: context,
-      builder: (context) =>
-          ListView(shrinkWrap: true, children: presets.map((p) => ListTile(title: Text(p.id))).toList()),
-    );
+    final presets = await SessionUtility.load();
+    if (!mounted) return;
 
-    if (choice == null) return;
-    setState() {}
+    final selected = await showPresetPicker(
+      context,
+      presets: presets,
+      onDelete: (preset) async {
+        final current = await SessionUtility.load();
+        current.removeWhere((p) => p.id == preset.id);
+        await SessionUtility.save(current);
+      },
+    );
+    if (selected == null) return;
+
+    setState(() {
+      _players
+        ..clear()
+        ..addAll(
+          List.generate(
+            selected.names.length,
+            (i) => PlayerEntry(name: selected.names[i], moneyIn: selected.moneyIns[i]),
+          ),
+        );
+      _currentPreset = selected;
+    });
+  }
+
+  void _resetSession() {
+    FocusManager.instance.primaryFocus?.unfocus();
+    setState(() {
+      _players
+        ..clear()
+        ..addAll(List.generate(PrefValues.savedPlayerCount, (_) => PlayerEntry()));
+      _transactions.clear();
+      _currentPreset = Preset(names: [], moneyIns: []);
+      _isCalculated = false;
+    });
   }
 
   Future<void> _onSavePresets() async {
-    final List<Preset> presets = await SessionUtility.load();
+    final presets = await SessionUtility.load();
     _currentPreset.names = _players.map((p) => p.name).toList();
     _currentPreset.moneyIns = _players.map((p) => p.moneyIn).toList();
     final i = presets.indexWhere((s) => s.id == _currentPreset.id);
@@ -128,6 +157,8 @@ class _SessionScreenState extends State<SessionScreen> {
       presets.add(_currentPreset);
     }
     await SessionUtility.save(presets);
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Preset saved')));
   }
 
   @override
@@ -136,13 +167,15 @@ class _SessionScreenState extends State<SessionScreen> {
       title: 'New Session',
       actions: [
         PopupMenuButton(
+          tooltip: 'Presets',
+          icon: const Icon(Icons.bookmark_border),
           itemBuilder: (context) => [
-            PopupMenuItem(child: Text('delete')),
-            PopupMenuItem(onTap: _onSavePresets, child: Text('save')),
-            PopupMenuItem(onTap: _onLoadPresets, child: Text('load')),
+            PopupMenuItem(onTap: _onSavePresets, child: const Text('Save Preset')),
+            PopupMenuItem(onTap: _onLoadPresets, child: const Text('Load Preset')),
           ],
-          icon: Icon(Icons.settings),
         ),
+        SizedBox(width: 10),
+        IconButton(onPressed: _resetSession, icon: Icon(Icons.loop)),
       ],
       child: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 12),
