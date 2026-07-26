@@ -24,6 +24,7 @@ class InputField extends StatelessWidget {
     final scheme = ThemeController.of(context).colorScheme;
     return TextField(
       readOnly: isReadOnly,
+      enableInteractiveSelection: false,
       onChanged: onChanged,
       maxLength: maxLength,
       style: TextStyle(color: isReadOnly ? scheme.onSurface : scheme.onPrimary),
@@ -72,6 +73,7 @@ class _OutputFieldState extends State<OutputField> {
     return TextField(
       controller: _controller,
       readOnly: true,
+      enableInteractiveSelection: false,
       textAlignVertical: TextAlignVertical.center,
       textAlign: TextAlign.end,
       decoration: _payoutFieldDecoration(scheme: scheme, isReadOnly: true, hintText: '0.00'),

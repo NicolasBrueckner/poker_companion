@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:poker_companion/core/utility.dart';
 import 'package:poker_companion/screens/base_screen.dart';
 import 'package:poker_companion/widgets/colorswitch.dart';
@@ -10,8 +11,35 @@ class SettingsScreen extends StatefulWidget {
   State<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProviderStateMixin {
   int _playerCount = PrefValues.savedPlayerCount;
+
+  late final AnimationController _spadeController = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 400),
+  );
+  late final Animation<double> _spadeScale = TweenSequence<double>([
+    TweenSequenceItem(tween: Tween(begin: 0.0, end: 1.0).chain(CurveTween(curve: Curves.easeOut)), weight: 40),
+    TweenSequenceItem(tween: Tween(begin: 1.0, end: 0.0).chain(CurveTween(curve: Curves.easeIn)), weight: 60),
+  ]).animate(_spadeController);
+
+  ColorScheme? _previousScheme;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final scheme = ThemeController.of(context).colorScheme;
+    if (_previousScheme != null && _previousScheme != scheme) {
+      _spadeController.forward(from: 0);
+    }
+    _previousScheme = scheme;
+  }
+
+  @override
+  void dispose() {
+    _spadeController.dispose();
+    super.dispose();
+  }
 
   void _increment() => setState(() {
     _playerCount++;
@@ -32,6 +60,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final scheme = ThemeController.of(context).colorScheme;
     return BaseScreen(
       title: 'Settings',
+      actions: [
+        for (final suit in ['club', 'heart', 'spade', 'diamond'])
+          ScaleTransition(
+            scale: _spadeScale,
+            child: SvgPicture.asset(
+              'assets/playing-cards/suits/$suit.svg',
+              colorMapper: OutlineMapper(scheme.onSurface, scheme.primary),
+            ),
+          ),
+      ],
       child: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 12),
         child: Column(
@@ -92,11 +130,7 @@ class _StepButton extends StatelessWidget {
           color: enabled ? scheme.primary : scheme.onSurface.withValues(alpha: 0.08),
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Icon(
-          icon,
-          size: 20,
-          color: enabled ? scheme.onPrimary : scheme.onSurface.withValues(alpha: 0.3),
-        ),
+        child: Icon(icon, size: 20, color: enabled ? scheme.onPrimary : scheme.onSurface.withValues(alpha: 0.3)),
       ),
     );
   }

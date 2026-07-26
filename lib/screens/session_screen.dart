@@ -17,7 +17,7 @@ class SessionScreen extends StatefulWidget {
 }
 
 class _SessionScreenState extends State<SessionScreen> {
-  final List<PlayerEntry> _players = List.generate(PrefValues.savedPlayerCount, (i) => PlayerEntry());
+  static final List<PlayerEntry> _players = List.generate(PrefValues.savedPlayerCount, (i) => PlayerEntry());
   final List<Transaction> _transactions = [];
   final HistoryData _currentSession = HistoryData(
     date: '${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}',
@@ -67,7 +67,7 @@ class _SessionScreenState extends State<SessionScreen> {
 
     FocusManager.instance.primaryFocus?.unfocus();
 
-    if (sumIn.abs() > 0.001) {
+    if ((sumIn - sumOut).abs() > 0.001) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Totals don\'t match - in: ${sumIn.toStringAsFixed(2)}, out: ${sumOut.toStringAsFixed(2)}'),
@@ -88,10 +88,10 @@ class _SessionScreenState extends State<SessionScreen> {
     });
   }
 
-  void _onSavePressed() async {
+  void _onSessionSavePressed() async {
     await _saveSession();
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Saved')));
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Session saved')));
   }
 
   Future<void> _saveSession() async {
@@ -106,7 +106,7 @@ class _SessionScreenState extends State<SessionScreen> {
     await HistoryUtility.save(sessions);
   }
 
-  Future<void> _onLoadPresets() async {
+  Future<void> _onPresetsPressed() async {
     final presets = await SessionUtility.load();
     if (!mounted) return;
 
@@ -118,6 +118,7 @@ class _SessionScreenState extends State<SessionScreen> {
         current.removeWhere((p) => p.id == preset.id);
         await SessionUtility.save(current);
       },
+      onSave: _savePresets,
     );
     if (selected == null) return;
 
@@ -146,7 +147,7 @@ class _SessionScreenState extends State<SessionScreen> {
     });
   }
 
-  Future<void> _onSavePresets() async {
+  Future<Preset> _savePresets() async {
     final presets = await SessionUtility.load();
     _currentPreset.names = _players.map((p) => p.name).toList();
     _currentPreset.moneyIns = _players.map((p) => p.moneyIn).toList();
@@ -157,8 +158,10 @@ class _SessionScreenState extends State<SessionScreen> {
       presets.add(_currentPreset);
     }
     await SessionUtility.save(presets);
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Preset saved')));
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Preset saved')));
+    }
+    return _currentPreset;
   }
 
   @override
@@ -166,14 +169,7 @@ class _SessionScreenState extends State<SessionScreen> {
     return BaseScreen(
       title: 'New Session',
       actions: [
-        PopupMenuButton(
-          tooltip: 'Presets',
-          icon: const Icon(Icons.bookmark_border),
-          itemBuilder: (context) => [
-            PopupMenuItem(onTap: _onSavePresets, child: const Text('Save Preset')),
-            PopupMenuItem(onTap: _onLoadPresets, child: const Text('Load Preset')),
-          ],
-        ),
+        IconButton(onPressed: _onPresetsPressed, icon: Icon(Icons.bookmark_border)),
         SizedBox(width: 10),
         IconButton(onPressed: _resetSession, icon: Icon(Icons.loop)),
       ],
@@ -201,7 +197,7 @@ class _SessionScreenState extends State<SessionScreen> {
               onAddPressed: _onAddPressed,
               onCalculatePressed: _onCalculatePressed,
               onEditPressed: _onEditPressed,
-              onSavePressed: _onSavePressed,
+              onSavePressed: _onSessionSavePressed,
               transactions: _transactions,
             ),
           ],

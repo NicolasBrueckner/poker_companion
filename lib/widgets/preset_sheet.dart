@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:poker_companion/core/payout_data.dart';
 import 'package:poker_companion/core/utility.dart';
+import 'package:poker_companion/widgets/buttons.dart';
 import 'package:poker_companion/widgets/preset_item.dart';
 
 Future<Preset?> showPresetPicker(
   BuildContext context, {
   required List<Preset> presets,
   required Future<void> Function(Preset) onDelete,
+  required Future<Preset> Function() onSave,
 }) {
   return showModalBottomSheet<Preset>(
     context: context,
     isScrollControlled: true,
     shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
-    builder: (context) => _PresetPickerSheet(presets: presets, onDelete: onDelete),
+    builder: (context) => _PresetPickerSheet(presets: presets, onDelete: onDelete, onSave: onSave),
   );
 }
 
 class _PresetPickerSheet extends StatefulWidget {
-  const _PresetPickerSheet({required this.presets, required this.onDelete});
+  const _PresetPickerSheet({required this.presets, required this.onDelete, required this.onSave});
   final List<Preset> presets;
   final Future<void> Function(Preset) onDelete;
+  final Future<Preset> Function() onSave;
 
   @override
   State<_PresetPickerSheet> createState() => _PresetPickerSheetState();
@@ -27,6 +30,19 @@ class _PresetPickerSheet extends StatefulWidget {
 
 class _PresetPickerSheetState extends State<_PresetPickerSheet> {
   late final List<Preset> _presets = List.of(widget.presets);
+
+  Future<void> _onSavePressed() async {
+    final saved = await widget.onSave();
+    if (!mounted) return;
+    setState(() {
+      final i = _presets.indexWhere((p) => p.id == saved.id);
+      if (i >= 0) {
+        _presets[i] = saved;
+      } else {
+        _presets.add(saved);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +98,8 @@ class _PresetPickerSheetState extends State<_PresetPickerSheet> {
                   },
                 ),
               ),
+            const SizedBox(height: 12),
+            BaseTextButton(label: '+ Save Current as Preset', onPressed: _onSavePressed),
           ],
         ),
       ),

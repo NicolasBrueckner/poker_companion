@@ -78,7 +78,7 @@ class HistoryUtility {
 }
 
 class SessionUtility {
-  static Future<File> _file() => _appDataFile('presets');
+  static Future<File> _file() => _appDataFile('presets.json');
 
   static Future<void> save(List<Preset> presets) async {
     final file = await _file();

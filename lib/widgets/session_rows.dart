@@ -74,7 +74,7 @@ class _PayoutInputRowState extends State<PayoutInputRow> {
                   setState(() => entry.moneyOut = double.tryParse(value) ?? 0);
                   widget.onChanged(entry);
                 },
-                hintText: '0.00',
+                hintText: entry.moneyIn == 0 ? '0.00' : entry.moneyIn.toString(),
                 inputFormatters: [FilteringTextInputFormatter.allow(decimalRegExp)],
                 keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: true),
                 isReadOnly: widget.isInputLocked,
