@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:poker_companion/widgets/bannerad.dart';
 
 class BaseScreen extends StatelessWidget {
   const BaseScreen({super.key, this.child, this.title = '', this.actions});
@@ -11,6 +12,7 @@ class BaseScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(title), actions: actions, actionsPadding: EdgeInsets.only(right: 20)),
       body: Center(child: FractionallySizedBox(widthFactor: 0.8, child: child)),
+      bottomNavigationBar: const CustomBannerAd(),
     );
   }
 }
