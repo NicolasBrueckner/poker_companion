@@ -12,6 +12,7 @@ class CustomBannerAd extends StatefulWidget {
 
 class _CustomBannerAdState extends State<CustomBannerAd> {
   BannerAd? _bannerAd;
+  AdSize? _adSize;
   bool _requested = false;
 
   @override
@@ -26,12 +27,18 @@ class _CustomBannerAdState extends State<CustomBannerAd> {
   Future<void> _loadAd(int width) async {
     final size = await AdSize.getLargeAnchoredAdaptiveBannerAdSize(width);
     if (size == null || !mounted) return;
+    // Reserve the layout space as soon as the size is known, so the body
+    // doesn't jump once the (slower, network-bound) ad creative finishes loading.
+    setState(() => _adSize = size);
     final banner = BannerAd(
       size: size,
       adUnitId: 'ca-app-pub-3940256099942544/6300978111',
       listener: BannerAdListener(
         onAdLoaded: (ad) => setState(() => _bannerAd = ad as BannerAd),
-        onAdFailedToLoad: (ad, error) => ad.dispose(),
+        onAdFailedToLoad: (ad, error) {
+          ad.dispose();
+          if (mounted) setState(() => _adSize = null);
+        },
       ),
       request: const AdRequest(),
     );
@@ -46,12 +53,13 @@ class _CustomBannerAdState extends State<CustomBannerAd> {
 
   @override
   Widget build(BuildContext context) {
+    final size = _adSize;
+    if (!Platform.isAndroid || size == null) return const SizedBox();
     final ad = _bannerAd;
-    if (!Platform.isAndroid || ad == null) return const SizedBox();
     return SizedBox(
-      width: ad.size.width.toDouble(),
-      height: ad.size.height.toDouble(),
-      child: AdWidget(ad: ad),
+      width: size.width.toDouble(),
+      height: size.height.toDouble(),
+      child: ad == null ? null : AdWidget(ad: ad),
     );
   }
 }

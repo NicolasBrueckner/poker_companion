@@ -107,7 +107,7 @@ class _SessionScreenState extends State<SessionScreen> {
     );
     overlay.insert(entry);
     await WidgetsBinding.instance.endOfFrame;
-    await ScreenCapture.capture(_repaintKey);
+    await ScreenCapture.share(_repaintKey);
     entry.remove();
   }
 
@@ -204,9 +204,7 @@ class _SessionScreenState extends State<SessionScreen> {
       title: 'New Session',
       actions: [
         IconButton(onPressed: _onPresetsPressed, icon: Icon(Icons.bookmark_border)),
-        SizedBox(width: 10),
         IconButton(onPressed: _resetSession, icon: Icon(Icons.loop)),
-        SizedBox(width: 10),
         IconButton(onPressed: _isCalculated ? _onSharePressed : null, icon: Icon(Icons.share)),
       ],
       child: SingleChildScrollView(

@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -10,6 +9,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:poker_companion/core/payout_data.dart';
 import 'package:poker_companion/screens/history_screen.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OutlineMapper extends ColorMapper {
@@ -118,13 +118,23 @@ class PrefValues {
 }
 
 class ScreenCapture {
-  static Future<void> capture(GlobalKey key) async {
+  static Future<void> share(GlobalKey key, {String fileName = 'poker_session.png'}) async {
     final boundary = key.currentContext!.findRenderObject() as RenderRepaintBoundary;
     final image = await boundary.toImage(pixelRatio: 3.0);
-    final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
-    final dir = await getApplicationDocumentsDirectory();
-    final file = File('${dir.path}/screenshot.png');
+    final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    final bytes = byteData!.buffer.asUint8List();
 
-    file.writeAsBytes(bytes!.buffer.asUint8List());
+    if (Platform.isWindows) {
+      final dir = await getApplicationDocumentsDirectory();
+      final file = File('${dir.path}/$fileName');
+      await file.writeAsBytes(bytes);
+      return;
+    }
+
+    final dir = await getTemporaryDirectory();
+    final file = File('${dir.path}/$fileName');
+    await file.writeAsBytes(bytes);
+
+    await SharePlus.instance.share(ShareParams(files: [XFile(file.path)]));
   }
 }

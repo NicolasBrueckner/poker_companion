@@ -10,6 +10,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await PrefValues.init();
-  if (Platform.isAndroid) MobileAds.instance.initialize();
+  if (Platform.isAndroid) await MobileAds.instance.initialize();
   runApp(Root());
 }
