@@ -15,12 +15,8 @@ Future<Preset?> showPresetPicker(
     context: context,
     isScrollControlled: true,
     shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
-    builder: (context) => _PresetPickerSheet(
-      presets: presets,
-      onDelete: onDelete,
-      onSave: onSave,
-      isPresetActive: isPresetActive,
-    ),
+    builder: (context) =>
+        _PresetPickerSheet(presets: presets, onDelete: onDelete, onSave: onSave, isPresetActive: isPresetActive),
   );
 }
 
@@ -44,16 +40,24 @@ class _PresetPickerSheetState extends State<_PresetPickerSheet> {
   late final List<Preset> _presets = List.of(widget.presets);
 
   Future<void> _onSavePressed() async {
-    final saved = await widget.onSave();
+    if (widget.isPresetActive) {
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Update preset?'),
+          content: const Text('This will overwrite the previously saved preset.'),
+          actions: [
+            TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: const Text('Cancel')),
+            TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: const Text('Update')),
+          ],
+        ),
+      );
+      if (confirmed != true) return;
+    }
     if (!mounted) return;
-    setState(() {
-      final i = _presets.indexWhere((p) => p.id == saved.id);
-      if (i >= 0) {
-        _presets[i] = saved;
-      } else {
-        _presets.add(saved);
-      }
-    });
+    await widget.onSave();
+    if (!mounted) return;
+    Navigator.of(context).pop();
   }
 
   @override
@@ -112,7 +116,7 @@ class _PresetPickerSheetState extends State<_PresetPickerSheet> {
               ),
             const SizedBox(height: 12),
             BaseTextButton(
-              label: widget.isPresetActive ? '+ Override current Preset' : '+ Save Current as Preset',
+              label: widget.isPresetActive ? '+ Update Preset' : '+ Save Current as Preset',
               onPressed: _onSavePressed,
             ),
           ],

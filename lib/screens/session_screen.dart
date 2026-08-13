@@ -195,6 +195,7 @@ class _SessionScreenState extends State<SessionScreen> {
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Preset saved')));
     }
+    FocusManager.instance.primaryFocus?.unfocus();
     return _currentPreset;
   }
 
