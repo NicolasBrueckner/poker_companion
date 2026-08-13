@@ -32,7 +32,7 @@ class _CustomBannerAdState extends State<CustomBannerAd> {
     setState(() => _adSize = size);
     final banner = BannerAd(
       size: size,
-      adUnitId: 'ca-app-pub-3940256099942544/6300978111',
+      adUnitId: 'ca-app-pub-3940256099942544/9214589741',
       listener: BannerAdListener(
         onAdLoaded: (ad) => setState(() => _bannerAd = ad as BannerAd),
         onAdFailedToLoad: (ad, error) {
@@ -58,7 +58,7 @@ class _CustomBannerAdState extends State<CustomBannerAd> {
     final ad = _bannerAd;
     return SizedBox(
       width: size.width.toDouble(),
-      height: size.height.toDouble(),
+      height: 0,
       child: ad == null ? null : AdWidget(ad: ad),
     );
   }
