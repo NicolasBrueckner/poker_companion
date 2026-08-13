@@ -1,7 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:path_provider/path_provider.dart';
@@ -112,4 +115,16 @@ class PrefValues {
 
   static set savedThemeId(String value) => prefs.setString('themeID', value);
   static set savedPlayerCount(int value) => prefs.setInt('playerCount', value);
+}
+
+class ScreenCapture {
+  static Future<void> capture(GlobalKey key) async {
+    final boundary = key.currentContext!.findRenderObject() as RenderRepaintBoundary;
+    final image = await boundary.toImage(pixelRatio: 3.0);
+    final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
+    final dir = await getApplicationDocumentsDirectory();
+    final file = File('${dir.path}/screenshot.png');
+
+    file.writeAsBytes(bytes!.buffer.asUint8List());
+  }
 }

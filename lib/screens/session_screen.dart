@@ -7,6 +7,7 @@ import 'package:poker_companion/screens/base_screen.dart';
 import 'package:poker_companion/screens/history_screen.dart';
 import 'package:poker_companion/widgets/buttons.dart';
 import 'package:poker_companion/widgets/preset_sheet.dart';
+import 'package:poker_companion/widgets/screenshot.dart';
 import 'package:poker_companion/widgets/session_rows.dart';
 
 class SessionScreen extends StatefulWidget {
@@ -17,9 +18,10 @@ class SessionScreen extends StatefulWidget {
 }
 
 class _SessionScreenState extends State<SessionScreen> {
-  static final List<PlayerEntry> _players = List.generate(PrefValues.savedPlayerCount, (i) => PlayerEntry());
+  final _repaintKey = GlobalKey();
+  final List<PlayerEntry> _players = List.generate(PrefValues.savedPlayerCount, (i) => PlayerEntry());
   final List<Transaction> _transactions = [];
-  final HistoryData _currentSession = HistoryData(
+  HistoryData _currentSession = HistoryData(
     date: '${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}',
     table: [],
   );
@@ -88,6 +90,27 @@ class _SessionScreenState extends State<SessionScreen> {
     });
   }
 
+  Future<void> _onSharePressed() async {
+    final overlay = Overlay.of(context);
+    final width = MediaQuery.sizeOf(context).width * 0.8;
+    final entry = OverlayEntry(
+      builder: (_) => Positioned(
+        left: -width - 100,
+        width: width,
+        child: Material(
+          child: RepaintBoundary(
+            key: _repaintKey,
+            child: SessionResultScreenshot(date: _currentSession.date, players: _players, transactions: _transactions),
+          ),
+        ),
+      ),
+    );
+    overlay.insert(entry);
+    await WidgetsBinding.instance.endOfFrame;
+    await ScreenCapture.capture(_repaintKey);
+    entry.remove();
+  }
+
   void _onSessionSavePressed() async {
     await _saveSession();
     if (!mounted) return;
@@ -119,6 +142,7 @@ class _SessionScreenState extends State<SessionScreen> {
         await SessionUtility.save(current);
       },
       onSave: _savePresets,
+      isPresetActive: _currentPreset.names.isNotEmpty,
     );
     if (selected == null) return;
 
@@ -132,6 +156,12 @@ class _SessionScreenState extends State<SessionScreen> {
           ),
         );
       _currentPreset = selected;
+      _transactions.clear();
+      _isCalculated = false;
+      _currentSession = HistoryData(
+        date: '${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}',
+        table: [],
+      );
     });
   }
 
@@ -144,6 +174,10 @@ class _SessionScreenState extends State<SessionScreen> {
       _transactions.clear();
       _currentPreset = Preset(names: [], moneyIns: []);
       _isCalculated = false;
+      _currentSession = HistoryData(
+        date: '${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}',
+        table: [],
+      );
     });
   }
 
@@ -172,6 +206,8 @@ class _SessionScreenState extends State<SessionScreen> {
         IconButton(onPressed: _onPresetsPressed, icon: Icon(Icons.bookmark_border)),
         SizedBox(width: 10),
         IconButton(onPressed: _resetSession, icon: Icon(Icons.loop)),
+        SizedBox(width: 10),
+        IconButton(onPressed: _isCalculated ? _onSharePressed : null, icon: Icon(Icons.share)),
       ],
       child: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 12),
@@ -192,14 +228,14 @@ class _SessionScreenState extends State<SessionScreen> {
               ),
             )),
             const SizedBox(height: 8),
-            _ConditionalSlice(
+            _ActionButtons(
               condition: _isCalculated,
               onAddPressed: _onAddPressed,
               onCalculatePressed: _onCalculatePressed,
               onEditPressed: _onEditPressed,
               onSavePressed: _onSessionSavePressed,
-              transactions: _transactions,
             ),
+            if (_isCalculated) ...[const SizedBox(height: 16), _SettlementsList(transactions: _transactions)],
           ],
         ),
       ),
@@ -246,13 +282,12 @@ class _ColumnHeaders extends StatelessWidget {
   }
 }
 
-class _ConditionalSlice extends StatelessWidget {
-  const _ConditionalSlice({
+class _ActionButtons extends StatelessWidget {
+  const _ActionButtons({
     required this.condition,
     required this.onAddPressed,
     required this.onCalculatePressed,
     required this.onEditPressed,
-    required this.transactions,
     required this.onSavePressed,
   });
   final bool condition;
@@ -260,7 +295,6 @@ class _ConditionalSlice extends StatelessWidget {
   final VoidCallback onCalculatePressed;
   final VoidCallback onEditPressed;
   final VoidCallback onSavePressed;
-  final List<Transaction> transactions;
 
   @override
   Widget build(BuildContext context) {
@@ -274,29 +308,22 @@ class _ConditionalSlice extends StatelessWidget {
         ],
       );
     }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    return Row(
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: BaseTextButton(label: 'Edit', onPressed: onEditPressed),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: BaseTextButton(label: 'Save', onPressed: onSavePressed),
-            ),
-          ],
+        Expanded(
+          child: BaseTextButton(label: 'Edit', onPressed: onEditPressed),
         ),
-        const SizedBox(height: 16),
-        PayoutResult(transactions: transactions),
+        const SizedBox(width: 8),
+        Expanded(
+          child: BaseTextButton(label: 'Save', onPressed: onSavePressed),
+        ),
       ],
     );
   }
 }
 
-class PayoutResult extends StatelessWidget {
-  const PayoutResult({super.key, required this.transactions});
+class _SettlementsList extends StatelessWidget {
+  const _SettlementsList({required this.transactions});
   final List<Transaction> transactions;
 
   @override

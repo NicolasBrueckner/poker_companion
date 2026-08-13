@@ -10,7 +10,11 @@ class BaseScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(title), actions: actions, actionsPadding: EdgeInsets.only(right: 20)),
+      appBar: AppBar(
+        title: Text(title, overflow: TextOverflow.ellipsis, softWrap: false),
+        actions: actions,
+        actionsPadding: EdgeInsets.only(right: 20),
+      ),
       body: Center(child: FractionallySizedBox(widthFactor: 0.8, child: child)),
       bottomNavigationBar: const CustomBannerAd(),
     );

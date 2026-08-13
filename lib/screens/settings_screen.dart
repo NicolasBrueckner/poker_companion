@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:poker_companion/core/utility.dart';
 import 'package:poker_companion/screens/base_screen.dart';
+import 'package:poker_companion/widgets/buttons.dart';
 import 'package:poker_companion/widgets/colorswitch.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -66,6 +67,8 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
             scale: _spadeScale,
             child: SvgPicture.asset(
               'assets/playing-cards/suits/$suit.svg',
+              width: 32,
+              height: 32,
               colorMapper: OutlineMapper(scheme.onSurface, scheme.primary),
             ),
           ),
@@ -73,7 +76,8 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
       child: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 12),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: 20,
           children: [
             ColorSwitch(),
             const SizedBox(height: 24),
@@ -86,7 +90,6 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                 letterSpacing: 0.5,
               ),
             ),
-            const SizedBox(height: 8),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -104,6 +107,8 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                 _StepButton(icon: Icons.add, onPressed: _increment),
               ],
             ),
+            const SizedBox(height: 8),
+            BaseTextButton(label: 'Remove ads'),
           ],
         ),
       ),

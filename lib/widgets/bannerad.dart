@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -15,7 +17,8 @@ class _CustomBannerAdState extends State<CustomBannerAd> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (_requested) return;
+
+    if (!Platform.isAndroid || _requested) return;
     _requested = true;
     _loadAd(MediaQuery.sizeOf(context).width.truncate());
   }
@@ -44,7 +47,7 @@ class _CustomBannerAdState extends State<CustomBannerAd> {
   @override
   Widget build(BuildContext context) {
     final ad = _bannerAd;
-    if (ad == null) return const SizedBox();
+    if (!Platform.isAndroid || ad == null) return const SizedBox();
     return SizedBox(
       width: ad.size.width.toDouble(),
       height: ad.size.height.toDouble(),

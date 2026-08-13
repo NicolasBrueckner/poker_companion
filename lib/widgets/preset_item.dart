@@ -35,32 +35,60 @@ class PresetItem extends StatelessWidget {
         ),
         child: Icon(Icons.delete_outline, color: scheme.primary),
       ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onSelect,
-          borderRadius: BorderRadius.circular(12),
-          child: Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              border: Border.all(color: scheme.onSurface.withValues(alpha: 0.15)),
-              borderRadius: BorderRadius.circular(12),
+      child: _PresetCard(preset: preset, onSelect: onSelect),
+    );
+  }
+}
+
+class _PresetCard extends StatefulWidget {
+  const _PresetCard({required this.preset, required this.onSelect});
+  final Preset preset;
+  final VoidCallback onSelect;
+
+  @override
+  State<_PresetCard> createState() => _PresetCardState();
+}
+
+class _PresetCardState extends State<_PresetCard> {
+  bool _pressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = ThemeController.of(context).colorScheme;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: widget.onSelect,
+        onHighlightChanged: (value) => setState(() => _pressed = value),
+        borderRadius: BorderRadius.circular(12),
+        splashColor: scheme.primary.withValues(alpha: 0.12),
+        highlightColor: scheme.primary.withValues(alpha: 0.08),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: _pressed ? scheme.primary.withValues(alpha: 0.06) : null,
+            border: Border.all(
+              color: _pressed ? scheme.primary : scheme.onSurface,
+              width: 1,
+              strokeAlign: BorderSide.strokeAlignInside,
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _PresetHeader(preset: preset),
-                const SizedBox(height: 8),
-                Divider(height: 1, color: scheme.onSurface.withValues(alpha: 0.1)),
-                const SizedBox(height: 8),
-                const _TableHeaders(),
-                const SizedBox(height: 2),
-                ...List.generate(
-                  preset.names.length,
-                  (i) => _PresetRow(name: preset.names[i], moneyIn: preset.moneyIns[i]),
-                ),
-              ],
-            ),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _PresetHeader(preset: widget.preset),
+              const SizedBox(height: 8),
+              Divider(height: 1, color: scheme.onSurface.withValues(alpha: 0.1)),
+              const SizedBox(height: 8),
+              const _TableHeaders(),
+              const SizedBox(height: 2),
+              ...List.generate(
+                widget.preset.names.length,
+                (i) => _PresetRow(name: widget.preset.names[i], moneyIn: widget.preset.moneyIns[i]),
+              ),
+            ],
           ),
         ),
       ),
@@ -80,9 +108,20 @@ class _PresetHeader extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text('${preset.names.length} players', style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
-        Text(
-          'Pot  ${total.toStringAsFixed(2)}',
-          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: scheme.onSurface.withValues(alpha: 0.55)),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Pot  ${total.toStringAsFixed(2)}',
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
+                color: scheme.onSurface.withValues(alpha: 0.55),
+              ),
+            ),
+            const SizedBox(width: 4),
+            Icon(Icons.chevron_right, size: 18, color: scheme.onSurface.withValues(alpha: 0.4)),
+          ],
         ),
       ],
     );

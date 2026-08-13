@@ -9,20 +9,32 @@ Future<Preset?> showPresetPicker(
   required List<Preset> presets,
   required Future<void> Function(Preset) onDelete,
   required Future<Preset> Function() onSave,
+  required bool isPresetActive,
 }) {
   return showModalBottomSheet<Preset>(
     context: context,
     isScrollControlled: true,
     shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
-    builder: (context) => _PresetPickerSheet(presets: presets, onDelete: onDelete, onSave: onSave),
+    builder: (context) => _PresetPickerSheet(
+      presets: presets,
+      onDelete: onDelete,
+      onSave: onSave,
+      isPresetActive: isPresetActive,
+    ),
   );
 }
 
 class _PresetPickerSheet extends StatefulWidget {
-  const _PresetPickerSheet({required this.presets, required this.onDelete, required this.onSave});
+  const _PresetPickerSheet({
+    required this.presets,
+    required this.onDelete,
+    required this.onSave,
+    required this.isPresetActive,
+  });
   final List<Preset> presets;
   final Future<void> Function(Preset) onDelete;
   final Future<Preset> Function() onSave;
+  final bool isPresetActive;
 
   @override
   State<_PresetPickerSheet> createState() => _PresetPickerSheetState();
@@ -99,7 +111,10 @@ class _PresetPickerSheetState extends State<_PresetPickerSheet> {
                 ),
               ),
             const SizedBox(height: 12),
-            BaseTextButton(label: '+ Save Current as Preset', onPressed: _onSavePressed),
+            BaseTextButton(
+              label: widget.isPresetActive ? '+ Override current Preset' : '+ Save Current as Preset',
+              onPressed: _onSavePressed,
+            ),
           ],
         ),
       ),
