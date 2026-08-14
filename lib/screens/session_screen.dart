@@ -10,6 +10,7 @@ import 'package:poker_companion/widgets/buttons.dart';
 import 'package:poker_companion/widgets/preset_sheet.dart';
 import 'package:poker_companion/widgets/screenshot.dart';
 import 'package:poker_companion/widgets/session_rows.dart';
+import 'package:poker_companion/widgets/tutorial_overlay.dart';
 
 class SessionScreen extends StatefulWidget {
   const SessionScreen({super.key});
@@ -20,6 +21,11 @@ class SessionScreen extends StatefulWidget {
 
 class _SessionScreenState extends State<SessionScreen> {
   final _repaintKey = GlobalKey();
+  final _presetKey = GlobalKey();
+  final _resetKey = GlobalKey();
+  final _shareKey = GlobalKey();
+  final _firstRowKey = GlobalKey();
+  final _calculateKey = GlobalKey();
   final List<PlayerEntry> _players = List.generate(PrefValues.savedPlayerCount, (i) => PlayerEntry());
   final List<Transaction> _transactions = [];
   HistoryData _currentSession = HistoryData(
@@ -28,6 +34,31 @@ class _SessionScreenState extends State<SessionScreen> {
   );
   Preset _currentPreset = Preset(names: [], moneyIns: []);
   bool _isCalculated = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (!PrefValues.hasSeenSessionTutorial) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _showTutorial());
+    }
+  }
+
+  void _showTutorial() {
+    if (!mounted) return;
+    final l10n = AppLocalizations.of(context)!;
+    showSpotlightTutorial(context, [
+      TutorialStep(targetKey: _presetKey, title: l10n.tutorialPresetTitle, description: l10n.tutorialPresetDescription),
+      TutorialStep(targetKey: _resetKey, title: l10n.tutorialResetTitle, description: l10n.tutorialResetDescription),
+      TutorialStep(targetKey: _shareKey, title: l10n.tutorialShareTitle, description: l10n.tutorialShareDescription),
+      TutorialStep(targetKey: _firstRowKey, title: l10n.tutorialDeleteTitle, description: l10n.tutorialDeleteDescription),
+      TutorialStep(
+        targetKey: _calculateKey,
+        title: l10n.tutorialCalculateTitle,
+        description: l10n.tutorialCalculateDescription,
+      ),
+    ]);
+    PrefValues.hasSeenSessionTutorial = true;
+  }
 
   void _calculateTransactions() {
     final List<PlayerBalance> balances = _players.map((p) => PlayerBalance(name: p.name, balance: p.net)).toList();
@@ -204,9 +235,9 @@ class _SessionScreenState extends State<SessionScreen> {
     return BaseScreen(
       title: AppLocalizations.of(context)!.newSession,
       actions: [
-        IconButton(onPressed: _onPresetsPressed, icon: Icon(Icons.bookmark_border)),
-        IconButton(onPressed: _resetSession, icon: Icon(Icons.loop)),
-        IconButton(onPressed: _isCalculated ? _onSharePressed : null, icon: Icon(Icons.share)),
+        IconButton(key: _presetKey, onPressed: _onPresetsPressed, icon: Icon(Icons.bookmark_border)),
+        IconButton(key: _resetKey, onPressed: _resetSession, icon: Icon(Icons.loop)),
+        IconButton(key: _shareKey, onPressed: _isCalculated ? _onSharePressed : null, icon: Icon(Icons.share)),
       ],
       child: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 12),
@@ -214,8 +245,9 @@ class _SessionScreenState extends State<SessionScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const _ColumnHeaders(),
-            ...(_players.map(
-              (p) => PayoutInputRow(
+            ...(_players.asMap().entries.map((entry) {
+              final p = entry.value;
+              final row = PayoutInputRow(
                 key: ObjectKey(p),
                 entry: p,
                 onChanged: (_) {},
@@ -224,11 +256,13 @@ class _SessionScreenState extends State<SessionScreen> {
                   setState(() {});
                 },
                 isInputLocked: _isCalculated,
-              ),
-            )),
+              );
+              return entry.key == 0 ? KeyedSubtree(key: _firstRowKey, child: row) : row;
+            })),
             const SizedBox(height: 8),
             _ActionButtons(
               condition: _isCalculated,
+              calculateKey: _calculateKey,
               onAddPressed: _onAddPressed,
               onCalculatePressed: _onCalculatePressed,
               onEditPressed: _onEditPressed,
@@ -285,12 +319,14 @@ class _ColumnHeaders extends StatelessWidget {
 class _ActionButtons extends StatelessWidget {
   const _ActionButtons({
     required this.condition,
+    required this.calculateKey,
     required this.onAddPressed,
     required this.onCalculatePressed,
     required this.onEditPressed,
     required this.onSavePressed,
   });
   final bool condition;
+  final Key calculateKey;
   final VoidCallback onAddPressed;
   final VoidCallback onCalculatePressed;
   final VoidCallback onEditPressed;
@@ -305,7 +341,7 @@ class _ActionButtons extends StatelessWidget {
         children: [
           BaseTextButton(label: l10n.addPlayer, primary: false, onPressed: onAddPressed),
           const SizedBox(height: 8),
-          BaseTextButton(label: l10n.calculate, onPressed: onCalculatePressed),
+          BaseTextButton(key: calculateKey, label: l10n.calculate, onPressed: onCalculatePressed),
         ],
       );
     }

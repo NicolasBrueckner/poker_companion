@@ -69,5 +69,19 @@
   "darkTheme": "SOMBRE",
   "systemDefault": "Par défaut du système",
 
-  "pokerSessionHeading": "Poker Session"
+  "pokerSessionHeading": "Poker Session",
+
+  "tutorialPresetTitle": "Préréglages",
+  "tutorialPresetDescription": "Enregistrez un groupe de joueurs comme préréglage et rechargez-le lors de prochaines sessions.",
+  "tutorialResetTitle": "Réinitialiser",
+  "tutorialResetDescription": "Videz le tableau et démarrez une nouvelle session.",
+  "tutorialShareTitle": "Partager",
+  "tutorialShareDescription": "Une fois le calcul effectué, partagez un aperçu des résultats avec votre groupe.",
+  "tutorialDeleteTitle": "Supprimer un joueur",
+  "tutorialDeleteDescription": "Balayez une ligne de joueur vers la gauche pour la supprimer.",
+  "tutorialCalculateTitle": "Calculer",
+  "tutorialCalculateDescription": "Saisissez les mises et les gains, puis appuyez ici pour calculer qui paie qui.",
+  "tutorialNext": "Suivant",
+  "tutorialSkip": "Passer",
+  "tutorialGotIt": "Compris"
 }

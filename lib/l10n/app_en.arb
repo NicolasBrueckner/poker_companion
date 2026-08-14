@@ -101,5 +101,19 @@
   "darkTheme": "DARK",
   "systemDefault": "System default",
 
-  "pokerSessionHeading": "Poker Session"
+  "pokerSessionHeading": "Poker Session",
+
+  "tutorialPresetTitle": "Presets",
+  "tutorialPresetDescription": "Save a group of players as a preset and load them again in future sessions.",
+  "tutorialResetTitle": "Reset",
+  "tutorialResetDescription": "Clear the table and start a fresh session.",
+  "tutorialShareTitle": "Share",
+  "tutorialShareDescription": "Once calculated, share a snapshot of the results with your group.",
+  "tutorialDeleteTitle": "Delete a Player",
+  "tutorialDeleteDescription": "Swipe a player row to the left to remove them.",
+  "tutorialCalculateTitle": "Calculate",
+  "tutorialCalculateDescription": "Enter buy-ins and cash-outs, then tap here to work out who pays whom.",
+  "tutorialNext": "Next",
+  "tutorialSkip": "Skip",
+  "tutorialGotIt": "Got it"
 }

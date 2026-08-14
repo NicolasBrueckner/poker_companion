@@ -413,6 +413,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Poker Session'**
   String get pokerSessionHeading;
+
+  /// No description provided for @tutorialPresetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Presets'**
+  String get tutorialPresetTitle;
+
+  /// No description provided for @tutorialPresetDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Save a group of players as a preset and load them again in future sessions.'**
+  String get tutorialPresetDescription;
+
+  /// No description provided for @tutorialResetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get tutorialResetTitle;
+
+  /// No description provided for @tutorialResetDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear the table and start a fresh session.'**
+  String get tutorialResetDescription;
+
+  /// No description provided for @tutorialShareTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get tutorialShareTitle;
+
+  /// No description provided for @tutorialShareDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Once calculated, share a snapshot of the results with your group.'**
+  String get tutorialShareDescription;
+
+  /// No description provided for @tutorialDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete a Player'**
+  String get tutorialDeleteTitle;
+
+  /// No description provided for @tutorialDeleteDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Swipe a player row to the left to remove them.'**
+  String get tutorialDeleteDescription;
+
+  /// No description provided for @tutorialCalculateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Calculate'**
+  String get tutorialCalculateTitle;
+
+  /// No description provided for @tutorialCalculateDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter buy-ins and cash-outs, then tap here to work out who pays whom.'**
+  String get tutorialCalculateDescription;
+
+  /// No description provided for @tutorialNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get tutorialNext;
+
+  /// No description provided for @tutorialSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get tutorialSkip;
+
+  /// No description provided for @tutorialGotIt.
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get tutorialGotIt;
 }
 
 class _AppLocalizationsDelegate

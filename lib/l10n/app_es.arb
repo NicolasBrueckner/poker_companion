@@ -69,5 +69,19 @@
   "darkTheme": "OSCURO",
   "systemDefault": "Predeterminado del sistema",
 
-  "pokerSessionHeading": "Poker Session"
+  "pokerSessionHeading": "Poker Session",
+
+  "tutorialPresetTitle": "Preajustes",
+  "tutorialPresetDescription": "Guarda un grupo de jugadores como preajuste y cárgalo de nuevo en futuras sesiones.",
+  "tutorialResetTitle": "Reiniciar",
+  "tutorialResetDescription": "Borra la tabla y comienza una nueva sesión.",
+  "tutorialShareTitle": "Compartir",
+  "tutorialShareDescription": "Una vez calculado, comparte una captura de los resultados con tu grupo.",
+  "tutorialDeleteTitle": "Eliminar jugador",
+  "tutorialDeleteDescription": "Desliza una fila de jugador hacia la izquierda para eliminarlo.",
+  "tutorialCalculateTitle": "Calcular",
+  "tutorialCalculateDescription": "Introduce las entradas y salidas, luego toca aquí para calcular quién le paga a quién.",
+  "tutorialNext": "Siguiente",
+  "tutorialSkip": "Omitir",
+  "tutorialGotIt": "Entendido"
 }

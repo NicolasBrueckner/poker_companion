@@ -69,5 +69,19 @@
   "darkTheme": "DUNKEL",
   "systemDefault": "Systemstandard",
 
-  "pokerSessionHeading": "Poker Session"
+  "pokerSessionHeading": "Poker Session",
+
+  "tutorialPresetTitle": "Vorlagen",
+  "tutorialPresetDescription": "Speichere eine Gruppe von Spielern als Vorlage und lade sie in zukünftigen Sessions erneut.",
+  "tutorialResetTitle": "Zurücksetzen",
+  "tutorialResetDescription": "Leere die Tabelle und starte eine neue Session.",
+  "tutorialShareTitle": "Teilen",
+  "tutorialShareDescription": "Teile nach der Berechnung eine Übersicht der Ergebnisse mit deiner Gruppe.",
+  "tutorialDeleteTitle": "Spieler löschen",
+  "tutorialDeleteDescription": "Wische eine Spielerzeile nach links, um sie zu entfernen.",
+  "tutorialCalculateTitle": "Berechnen",
+  "tutorialCalculateDescription": "Trage Einsätze und Auszahlungen ein und tippe dann hier, um zu berechnen, wer wem zahlt.",
+  "tutorialNext": "Weiter",
+  "tutorialSkip": "Überspringen",
+  "tutorialGotIt": "Verstanden"
 }

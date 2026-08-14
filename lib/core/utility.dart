@@ -126,10 +126,12 @@ class PrefValues {
   static int get savedPlayerCount => prefs.getInt('playerCount') ?? 1;
   static bool get adsRemoved => prefs.getBool('adsRemoved') ?? false;
   static String? get savedLocaleCode => prefs.getString('localeCode');
+  static bool get hasSeenSessionTutorial => prefs.getBool('hasSeenSessionTutorial') ?? false;
 
   static set savedThemeId(String value) => prefs.setString('themeID', value);
   static set savedPlayerCount(int value) => prefs.setInt('playerCount', value);
   static set adsRemoved(bool value) => prefs.setBool('adsRemoved', value);
+  static set hasSeenSessionTutorial(bool value) => prefs.setBool('hasSeenSessionTutorial', value);
   static set savedLocaleCode(String? value) {
     if (value == null) {
       prefs.remove('localeCode');

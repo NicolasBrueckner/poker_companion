@@ -181,4 +181,48 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pokerSessionHeading => 'Poker Session';
+
+  @override
+  String get tutorialPresetTitle => 'Presets';
+
+  @override
+  String get tutorialPresetDescription =>
+      'Save a group of players as a preset and load them again in future sessions.';
+
+  @override
+  String get tutorialResetTitle => 'Reset';
+
+  @override
+  String get tutorialResetDescription =>
+      'Clear the table and start a fresh session.';
+
+  @override
+  String get tutorialShareTitle => 'Share';
+
+  @override
+  String get tutorialShareDescription =>
+      'Once calculated, share a snapshot of the results with your group.';
+
+  @override
+  String get tutorialDeleteTitle => 'Delete a Player';
+
+  @override
+  String get tutorialDeleteDescription =>
+      'Swipe a player row to the left to remove them.';
+
+  @override
+  String get tutorialCalculateTitle => 'Calculate';
+
+  @override
+  String get tutorialCalculateDescription =>
+      'Enter buy-ins and cash-outs, then tap here to work out who pays whom.';
+
+  @override
+  String get tutorialNext => 'Next';
+
+  @override
+  String get tutorialSkip => 'Skip';
+
+  @override
+  String get tutorialGotIt => 'Got it';
 }
