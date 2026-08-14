@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:poker_companion/core/purchases.dart';
 
 class CustomBannerAd extends StatefulWidget {
   const CustomBannerAd({super.key});
@@ -19,7 +20,7 @@ class _CustomBannerAdState extends State<CustomBannerAd> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    if (!Platform.isAndroid || _requested) return;
+    if (!Platform.isAndroid || _requested || PurchaseService.adsRemoved.value) return;
     _requested = true;
     _loadAd(MediaQuery.sizeOf(context).width.truncate());
   }
@@ -27,8 +28,7 @@ class _CustomBannerAdState extends State<CustomBannerAd> {
   Future<void> _loadAd(int width) async {
     final size = await AdSize.getLargeAnchoredAdaptiveBannerAdSize(width);
     if (size == null || !mounted) return;
-    // Reserve the layout space as soon as the size is known, so the body
-    // doesn't jump once the (slower, network-bound) ad creative finishes loading.
+
     setState(() => _adSize = size);
     final banner = BannerAd(
       size: size,
@@ -53,13 +53,18 @@ class _CustomBannerAdState extends State<CustomBannerAd> {
 
   @override
   Widget build(BuildContext context) {
-    final size = _adSize;
-    if (!Platform.isAndroid || size == null) return const SizedBox();
-    final ad = _bannerAd;
-    return SizedBox(
-      width: size.width.toDouble(),
-      height: 0,
-      child: ad == null ? null : AdWidget(ad: ad),
+    return ValueListenableBuilder<bool>(
+      valueListenable: PurchaseService.adsRemoved,
+      builder: (context, removed, _) {
+        final size = _adSize;
+        if (removed || !Platform.isAndroid || size == null) return const SizedBox();
+        final ad = _bannerAd;
+        return SizedBox(
+          width: size.width.toDouble(),
+          height: size.height.toDouble(),
+          child: ad == null ? null : AdWidget(ad: ad),
+        );
+      },
     );
   }
 }

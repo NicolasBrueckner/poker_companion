@@ -301,7 +301,7 @@ class _ActionButtons extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          BaseTextButton(label: '+ Add Player', onPressed: onAddPressed),
+          BaseTextButton(label: '+ Add Player', primary: false, onPressed: onAddPressed),
           const SizedBox(height: 8),
           BaseTextButton(label: 'Calculate', onPressed: onCalculatePressed),
         ],
@@ -310,7 +310,7 @@ class _ActionButtons extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: BaseTextButton(label: 'Edit', onPressed: onEditPressed),
+          child: BaseTextButton(label: 'Edit', primary: false, onPressed: onEditPressed),
         ),
         const SizedBox(width: 8),
         Expanded(

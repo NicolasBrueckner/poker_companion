@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:poker_companion/core/purchases.dart';
 import 'package:poker_companion/core/utility.dart';
 import 'package:poker_companion/screens/base_screen.dart';
 import 'package:poker_companion/widgets/buttons.dart';
 import 'package:poker_companion/widgets/colorswitch.dart';
+import 'package:poker_companion/widgets/suits_row.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -25,6 +30,15 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
   ]).animate(_spadeController);
 
   ColorScheme? _previousScheme;
+  String? _appVersion;
+
+  @override
+  void initState() {
+    super.initState();
+    PackageInfo.fromPlatform().then((info) {
+      if (mounted) setState(() => _appVersion = info.version);
+    });
+  }
 
   @override
   void didChangeDependencies() {
@@ -74,42 +88,253 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
           ),
       ],
       child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: 12),
+        padding: const EdgeInsets.symmetric(vertical: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          spacing: 20,
+          spacing: 28,
           children: [
-            ColorSwitch(),
-            const SizedBox(height: 24),
-            Text(
-              'DEFAULT PLAYER COUNT',
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-                color: scheme.onSurface.withValues(alpha: 0.55),
-                letterSpacing: 0.5,
+            _SettingsSection(
+              label: 'APPEARANCE',
+              child: _SettingsCard(child: ColorSwitch()),
+            ),
+            _SettingsSection(
+              label: 'GAME DEFAULTS',
+              child: _SettingsCard(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Default player count',
+                        style: TextStyle(fontWeight: FontWeight.w600, color: scheme.onSurface),
+                      ),
+                    ),
+                    _StepButton(icon: Icons.remove, onPressed: _playerCount > 1 ? _decrement : null),
+                    Container(
+                      width: 36,
+                      alignment: Alignment.center,
+                      child: Text(
+                        '$_playerCount',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: scheme.onSurface),
+                      ),
+                    ),
+                    _StepButton(icon: Icons.add, onPressed: _increment),
+                  ],
+                ),
               ),
             ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _StepButton(icon: Icons.remove, onPressed: _playerCount > 1 ? _decrement : null),
-                const SizedBox(width: 4),
-                Container(
-                  width: 48,
-                  alignment: Alignment.center,
-                  child: Text(
-                    '$_playerCount',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: scheme.onSurface),
-                  ),
+            _SettingsSection(
+              label: 'GENERAL',
+              child: _SettingsCard(
+                padding: EdgeInsets.zero,
+                child: Column(
+                  children: [
+                    const _RemoveAdsRow(),
+                    Divider(height: 1, color: scheme.onSurface.withValues(alpha: 0.1)),
+                    _SettingsRow(
+                      icon: Icons.restore,
+                      label: 'Restore purchases',
+                      onTap: PurchaseService.restore,
+                    ),
+                    Divider(height: 1, color: scheme.onSurface.withValues(alpha: 0.1)),
+                    _SettingsRow(
+                      icon: Icons.info_outline,
+                      label: 'About',
+                      onTap: () => showDialog(
+                        context: context,
+                        builder: (context) => Dialog(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(24),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              spacing: 10,
+                              children: [
+                                FractionallySizedBox(widthFactor: 0.75, child: SuitsRowWidget()),
+                                Text(
+                                  'Poker Payout Calculator',
+                                  style: TextStyle(fontWeight: FontWeight.w700, color: scheme.onSurface),
+                                ),
+                                Text(
+                                  'Version ${_appVersion ?? ''}',
+                                  style: TextStyle(color: scheme.onSurface.withValues(alpha: 0.55)),
+                                ),
+                                const _PrivacyPolicyLink(),
+                                Text(
+                                  'Copyright \u00a9 ${DateTime.now().year} Mosscode Studios.\n All rights reserved.',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(color: scheme.onSurface.withValues(alpha: 0.55)),
+                                ),
+                                BaseTextButton(label: 'Close', onPressed: () => Navigator.pop(context)),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 4),
-                _StepButton(icon: Icons.add, onPressed: _increment),
-              ],
+              ),
             ),
-            const SizedBox(height: 8),
-            BaseTextButton(label: 'Remove ads'),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SettingsSection extends StatelessWidget {
+  const _SettingsSection({required this.label, required this.child});
+  final String label;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = ThemeController.of(context).colorScheme;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 4, bottom: 8),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              color: scheme.onSurface.withValues(alpha: 0.55),
+              letterSpacing: 0.5,
+            ),
+          ),
+        ),
+        child,
+      ],
+    );
+  }
+}
+
+class _SettingsCard extends StatelessWidget {
+  const _SettingsCard({required this.child, this.padding = const EdgeInsets.all(16)});
+  final Widget child;
+  final EdgeInsetsGeometry padding;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = ThemeController.of(context).colorScheme;
+    return Container(
+      padding: padding,
+      decoration: BoxDecoration(
+        border: Border.all(color: scheme.onSurface.withValues(alpha: 0.15)),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: child,
+    );
+  }
+}
+
+class _SettingsRow extends StatelessWidget {
+  const _SettingsRow({required this.icon, required this.label, this.trailing, this.onTap});
+  final IconData icon;
+  final String label;
+  final Widget? trailing;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = ThemeController.of(context).colorScheme;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        splashColor: scheme.primary.withValues(alpha: 0.12),
+        highlightColor: scheme.primary.withValues(alpha: 0.08),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          child: Row(
+            children: [
+              Icon(icon, size: 20, color: scheme.onSurface.withValues(alpha: 0.7)),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  label,
+                  style: TextStyle(fontWeight: FontWeight.w600, color: scheme.onSurface),
+                ),
+              ),
+              if (trailing != null) ...[trailing!, const SizedBox(width: 4)],
+              Icon(Icons.chevron_right, size: 18, color: scheme.onSurface.withValues(alpha: 0.4)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _RemoveAdsRow extends StatelessWidget {
+  const _RemoveAdsRow();
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: PurchaseService.adsRemoved,
+      builder: (context, removed, _) {
+        if (removed) {
+          return const _SettingsRow(icon: Icons.check_circle_outline, label: 'Ads removed', onTap: null);
+        }
+        return ValueListenableBuilder<ProductDetails?>(
+          valueListenable: PurchaseService.product,
+          builder: (context, product, _) => _SettingsRow(
+            icon: Icons.diamond_outlined,
+            label: 'Remove ads',
+            trailing: _PricePill(label: product?.price ?? '...'),
+            onTap: product == null ? null : PurchaseService.buyRemoveAds,
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _PricePill extends StatelessWidget {
+  const _PricePill({required this.label});
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = ThemeController.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(color: scheme.primary.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(20)),
+      child: Text(
+        label,
+        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: scheme.primary),
+      ),
+    );
+  }
+}
+
+class _PrivacyPolicyLink extends StatelessWidget {
+  const _PrivacyPolicyLink();
+
+  static final Uri _url = Uri.parse('https://mosscode-studios.com');
+
+  Future<void> _open(BuildContext context) async {
+    final launched = await launchUrl(_url, mode: LaunchMode.externalApplication);
+    if (!launched && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Could not open link')));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = ThemeController.of(context).colorScheme;
+    return GestureDetector(
+      onTap: () => _open(context),
+      child: Text(
+        'Privacy Policy',
+        style: TextStyle(
+          color: scheme.primary,
+          fontWeight: FontWeight.w600,
+          //decoration: TextDecoration.underline,
+          decorationColor: scheme.primary,
         ),
       ),
     );

@@ -112,9 +112,11 @@ class PrefValues {
 
   static String get savedThemeId => prefs.getString('themeID') ?? '0';
   static int get savedPlayerCount => prefs.getInt('playerCount') ?? 1;
+  static bool get adsRemoved => prefs.getBool('adsRemoved') ?? false;
 
   static set savedThemeId(String value) => prefs.setString('themeID', value);
   static set savedPlayerCount(int value) => prefs.setInt('playerCount', value);
+  static set adsRemoved(bool value) => prefs.setBool('adsRemoved', value);
 }
 
 class ScreenCapture {

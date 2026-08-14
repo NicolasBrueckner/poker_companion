@@ -27,11 +27,13 @@ class HomePage extends StatelessWidget {
           const SizedBox(height: 12),
           BaseTextButton(
             label: 'History',
+            primary: false,
             onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const HistoryScreen())),
           ),
           const SizedBox(height: 12),
           BaseTextButton(
             label: 'Settings',
+            primary: false,
             onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsScreen())),
           ),
         ],
