@@ -1,0 +1,73 @@
+{
+  "@@locale": "fr",
+
+  "appTitle": "Poker Payout Calculator",
+
+  "newSession": "Nouvelle Session",
+  "history": "Historique",
+  "settings": "Paramètres",
+
+  "cancel": "Annuler",
+  "delete": "Supprimer",
+  "update": "Mettre à jour",
+  "close": "Fermer",
+
+  "tableHeaderPlayer": "Joueur",
+  "tableHeaderBuyIn": "Mise",
+  "tableHeaderCashOut": "Retrait",
+  "tableHeaderNet": "Net",
+
+  "addPlayer": "+ Ajouter un joueur",
+  "calculate": "Calculer",
+  "edit": "Modifier",
+  "save": "Enregistrer",
+
+  "totalsMismatch": "Les totaux ne correspondent pas - mises : {sumIn}, retraits : {sumOut}",
+
+  "sessionSaved": "Session enregistrée",
+  "presetSaved": "Modèle enregistré",
+  "noSettlementsNeeded": "Aucun règlement nécessaire",
+  "settlements": "Règlements",
+  "nameHint": "Nom",
+
+  "noSessionsSavedYet": "Aucune session enregistrée pour le moment",
+
+  "potLabel": "Pot  {amount}",
+
+  "deleteSessionTitle": "Supprimer la session ?",
+  "deleteSessionContent": "Cette session sera définitivement supprimée.",
+
+  "loadPreset": "Charger un modèle",
+  "noPresetsSavedYet": "Aucun modèle enregistré pour le moment",
+  "updatePresetTitle": "Mettre à jour le modèle ?",
+  "updatePresetContent": "Cela remplacera le modèle précédemment enregistré.",
+  "updatePresetButton": "+ Mettre à jour le modèle",
+  "savePresetButton": "+ Enregistrer la session actuelle comme modèle",
+  "deletePresetTitle": "Supprimer le modèle ?",
+  "deletePresetContent": "Ce modèle sera définitivement supprimé.",
+
+  "playersCount": "{count, plural, one{1 joueur} other{{count} joueurs}}",
+
+  "appearanceSection": "APPARENCE",
+  "gameDefaultsSection": "PARAMÈTRES PAR DÉFAUT",
+  "generalSection": "GÉNÉRAL",
+  "languageSection": "LANGUE",
+  "defaultPlayerCount": "Nombre de joueurs par défaut",
+
+  "removeAds": "Supprimer les publicités",
+  "adsRemoved": "Publicités supprimées",
+  "restorePurchases": "Restaurer les achats",
+  "about": "À propos",
+  "couldNotOpenLink": "Impossible d'ouvrir le lien",
+  "privacyPolicy": "Politique de confidentialité",
+
+  "appVersion": "Version {version}",
+
+  "copyrightNotice": "Copyright © {year} Mosscode Studios.\nTous droits réservés.",
+
+  "lightTheme": "CLAIR",
+  "darkTheme": "SOMBRE",
+  "systemDefault": "Par défaut du système",
+
+  "pokerSessionHeading": "Poker Session"
+}

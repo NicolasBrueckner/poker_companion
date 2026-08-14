@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:poker_companion/core/payout_data.dart';
 import 'package:poker_companion/core/utility.dart';
+import 'package:poker_companion/l10n/app_localizations.dart';
 import 'package:poker_companion/widgets/text_fields.dart';
 
 class PayoutInputRow extends StatefulWidget {
@@ -51,7 +52,7 @@ class _PayoutInputRowState extends State<PayoutInputRow> {
                 },
                 isReadOnly: widget.isInputLocked,
                 maxLength: 12,
-                hintText: entry.name == '' ? 'Name' : entry.name,
+                hintText: entry.name == '' ? AppLocalizations.of(context)!.nameHint : entry.name,
               ),
             ),
             Expanded(

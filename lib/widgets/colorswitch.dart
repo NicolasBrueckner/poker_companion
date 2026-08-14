@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:poker_companion/core/themes.dart';
 import 'package:poker_companion/core/utility.dart';
+import 'package:poker_companion/l10n/app_localizations.dart';
 
 class ColorSwitch extends StatelessWidget {
   const ColorSwitch({super.key});
@@ -24,14 +25,15 @@ class ColorSwitch extends StatelessWidget {
       letterSpacing: 0.5,
     );
 
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('LIGHT', style: labelStyle),
+        Text(l10n.lightTheme, style: labelStyle),
         const SizedBox(height: 8),
         _ThemeGrid(entries: lightEntries, activeKey: activeKey),
         const SizedBox(height: 20),
-        Text('DARK', style: labelStyle),
+        Text(l10n.darkTheme, style: labelStyle),
         const SizedBox(height: 8),
         _ThemeGrid(entries: darkEntries, activeKey: activeKey),
       ],

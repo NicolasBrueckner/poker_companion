@@ -1,0 +1,73 @@
+{
+  "@@locale": "es",
+
+  "appTitle": "Poker Payout Calculator",
+
+  "newSession": "Nueva Sesión",
+  "history": "Historial",
+  "settings": "Ajustes",
+
+  "cancel": "Cancelar",
+  "delete": "Eliminar",
+  "update": "Actualizar",
+  "close": "Cerrar",
+
+  "tableHeaderPlayer": "Jugador",
+  "tableHeaderBuyIn": "Entrada",
+  "tableHeaderCashOut": "Salida",
+  "tableHeaderNet": "Neto",
+
+  "addPlayer": "+ Añadir jugador",
+  "calculate": "Calcular",
+  "edit": "Editar",
+  "save": "Guardar",
+
+  "totalsMismatch": "Los totales no coinciden - entrada: {sumIn}, salida: {sumOut}",
+
+  "sessionSaved": "Sesión guardada",
+  "presetSaved": "Plantilla guardada",
+  "noSettlementsNeeded": "No se necesitan pagos",
+  "settlements": "Pagos",
+  "nameHint": "Nombre",
+
+  "noSessionsSavedYet": "Aún no hay sesiones guardadas",
+
+  "potLabel": "Bote  {amount}",
+
+  "deleteSessionTitle": "¿Eliminar sesión?",
+  "deleteSessionContent": "Esta sesión se eliminará permanentemente.",
+
+  "loadPreset": "Cargar plantilla",
+  "noPresetsSavedYet": "Aún no hay plantillas guardadas",
+  "updatePresetTitle": "¿Actualizar plantilla?",
+  "updatePresetContent": "Esto sobrescribirá la plantilla guardada anteriormente.",
+  "updatePresetButton": "+ Actualizar plantilla",
+  "savePresetButton": "+ Guardar sesión actual como plantilla",
+  "deletePresetTitle": "¿Eliminar plantilla?",
+  "deletePresetContent": "Esta plantilla se eliminará permanentemente.",
+
+  "playersCount": "{count, plural, one{1 jugador} other{{count} jugadores}}",
+
+  "appearanceSection": "APARIENCIA",
+  "gameDefaultsSection": "VALORES PREDETERMINADOS",
+  "generalSection": "GENERAL",
+  "languageSection": "IDIOMA",
+  "defaultPlayerCount": "Número de jugadores predeterminado",
+
+  "removeAds": "Quitar anuncios",
+  "adsRemoved": "Anuncios eliminados",
+  "restorePurchases": "Restaurar compras",
+  "about": "Acerca de",
+  "couldNotOpenLink": "No se pudo abrir el enlace",
+  "privacyPolicy": "Política de privacidad",
+
+  "appVersion": "Versión {version}",
+
+  "copyrightNotice": "Copyright © {year} Mosscode Studios.\nTodos los derechos reservados.",
+
+  "lightTheme": "CLARO",
+  "darkTheme": "OSCURO",
+  "systemDefault": "Predeterminado del sistema",
+
+  "pokerSessionHeading": "Poker Session"
+}

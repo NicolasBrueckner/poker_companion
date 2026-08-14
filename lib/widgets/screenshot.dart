@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:poker_companion/core/payout_data.dart';
 import 'package:poker_companion/core/utility.dart';
+import 'package:poker_companion/l10n/app_localizations.dart';
 import 'package:poker_companion/widgets/session_rows.dart';
 
 class SessionResultScreenshot extends StatelessWidget {
@@ -13,6 +14,7 @@ class SessionResultScreenshot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = ThemeController.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       color: scheme.surface,
       padding: const EdgeInsets.all(20),
@@ -21,7 +23,7 @@ class SessionResultScreenshot extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            'Poker Session',
+            l10n.pokerSessionHeading,
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: scheme.onSurface),
           ),
           Text(date, style: TextStyle(fontSize: 12, color: scheme.onSurface.withValues(alpha: 0.55))),
@@ -30,7 +32,7 @@ class SessionResultScreenshot extends StatelessWidget {
           ...players.map((p) => _PlayerRow(entry: p, scheme: scheme)),
           const SizedBox(height: 20),
           Text(
-            'Settlements',
+            l10n.settlements,
             style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: scheme.onSurface, letterSpacing: 0.5),
           ),
           const SizedBox(height: 8),
@@ -38,7 +40,7 @@ class SessionResultScreenshot extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12),
               child: Text(
-                'No settlements needed',
+                l10n.noSettlementsNeeded,
                 textAlign: TextAlign.center,
                 style: TextStyle(color: scheme.onSurface.withValues(alpha: 0.5)),
               ),
@@ -57,6 +59,7 @@ class _HeaderRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final style = TextStyle(
       fontSize: 11,
       fontWeight: FontWeight.w600,
@@ -68,10 +71,10 @@ class _HeaderRow extends StatelessWidget {
       child: Row(
         spacing: 5,
         children: [
-          Expanded(flex: 4, child: Text('Player', style: style, textAlign: TextAlign.center)),
-          Expanded(flex: 3, child: Text('Buy In', style: style, textAlign: TextAlign.center)),
-          Expanded(flex: 3, child: Text('Cash Out', style: style, textAlign: TextAlign.center)),
-          Expanded(flex: 3, child: Text('Net', style: style, textAlign: TextAlign.center)),
+          Expanded(flex: 4, child: Text(l10n.tableHeaderPlayer, style: style, textAlign: TextAlign.center)),
+          Expanded(flex: 3, child: Text(l10n.tableHeaderBuyIn, style: style, textAlign: TextAlign.center)),
+          Expanded(flex: 3, child: Text(l10n.tableHeaderCashOut, style: style, textAlign: TextAlign.center)),
+          Expanded(flex: 3, child: Text(l10n.tableHeaderNet, style: style, textAlign: TextAlign.center)),
         ],
       ),
     );

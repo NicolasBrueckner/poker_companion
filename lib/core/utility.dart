@@ -47,6 +47,18 @@ class ThemeController extends InheritedWidget {
   bool updateShouldNotify(ThemeController old) => activeTheme != old.activeTheme || colorScheme != old.colorScheme;
 }
 
+class LocaleController extends InheritedWidget {
+  const LocaleController({super.key, required this.setLocale, required this.locale, required super.child});
+
+  final void Function(Locale?) setLocale;
+  final Locale? locale;
+
+  static LocaleController of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<LocaleController>()!;
+
+  @override
+  bool updateShouldNotify(LocaleController old) => locale != old.locale;
+}
+
 Future<File> _appDataFile(String fileName) async {
   final docsDir = await getApplicationDocumentsDirectory();
   final appDir = Directory('${docsDir.path}/PokerPayoutCalculator');
@@ -113,10 +125,18 @@ class PrefValues {
   static String get savedThemeId => prefs.getString('themeID') ?? '0';
   static int get savedPlayerCount => prefs.getInt('playerCount') ?? 1;
   static bool get adsRemoved => prefs.getBool('adsRemoved') ?? false;
+  static String? get savedLocaleCode => prefs.getString('localeCode');
 
   static set savedThemeId(String value) => prefs.setString('themeID', value);
   static set savedPlayerCount(int value) => prefs.setInt('playerCount', value);
   static set adsRemoved(bool value) => prefs.setBool('adsRemoved', value);
+  static set savedLocaleCode(String? value) {
+    if (value == null) {
+      prefs.remove('localeCode');
+    } else {
+      prefs.setString('localeCode', value);
+    }
+  }
 }
 
 class ScreenCapture {

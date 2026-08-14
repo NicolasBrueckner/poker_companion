@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:poker_companion/core/payout_data.dart';
 import 'package:poker_companion/core/utility.dart';
+import 'package:poker_companion/l10n/app_localizations.dart';
 import 'package:poker_companion/screens/base_screen.dart';
 import 'package:poker_companion/widgets/history_item.dart';
 
@@ -35,11 +36,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   Widget build(BuildContext context) {
     final scheme = ThemeController.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
     return BaseScreen(
-      title: 'History',
+      title: l10n.history,
       child: _sessions.isEmpty
           ? Center(
-              child: Text('No sessions saved yet', style: TextStyle(color: scheme.onSurface.withValues(alpha: 0.45))),
+              child: Text(l10n.noSessionsSavedYet, style: TextStyle(color: scheme.onSurface.withValues(alpha: 0.45))),
             )
           : ListView.separated(
               padding: const EdgeInsets.symmetric(vertical: 12),

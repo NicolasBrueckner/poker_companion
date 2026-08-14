@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:poker_companion/core/payout_data.dart';
 import 'package:poker_companion/core/utility.dart';
+import 'package:poker_companion/l10n/app_localizations.dart';
 import 'package:poker_companion/widgets/buttons.dart';
 import 'package:poker_companion/widgets/preset_item.dart';
 
@@ -41,14 +42,15 @@ class _PresetPickerSheetState extends State<_PresetPickerSheet> {
 
   Future<void> _onSavePressed() async {
     if (widget.isPresetActive) {
+      final l10n = AppLocalizations.of(context)!;
       final confirmed = await showDialog<bool>(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text('Update preset?'),
-          content: const Text('This will overwrite the previously saved preset.'),
+          title: Text(l10n.updatePresetTitle),
+          content: Text(l10n.updatePresetContent),
           actions: [
-            TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: const Text('Cancel')),
-            TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: const Text('Update')),
+            TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: Text(l10n.cancel)),
+            TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: Text(l10n.update)),
           ],
         ),
       );
@@ -63,6 +65,7 @@ class _PresetPickerSheetState extends State<_PresetPickerSheet> {
   @override
   Widget build(BuildContext context) {
     final scheme = ThemeController.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
@@ -82,7 +85,7 @@ class _PresetPickerSheetState extends State<_PresetPickerSheet> {
               ),
             ),
             Text(
-              'Load Preset',
+              l10n.loadPreset,
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: scheme.onSurface),
             ),
             const SizedBox(height: 12),
@@ -90,7 +93,7 @@ class _PresetPickerSheetState extends State<_PresetPickerSheet> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 24),
                 child: Text(
-                  'No presets saved yet',
+                  l10n.noPresetsSavedYet,
                   textAlign: TextAlign.center,
                   style: TextStyle(color: scheme.onSurface.withValues(alpha: 0.45)),
                 ),
@@ -116,7 +119,7 @@ class _PresetPickerSheetState extends State<_PresetPickerSheet> {
               ),
             const SizedBox(height: 12),
             BaseTextButton(
-              label: widget.isPresetActive ? '+ Update Preset' : '+ Save Current as Preset',
+              label: widget.isPresetActive ? l10n.updatePresetButton : l10n.savePresetButton,
               onPressed: _onSavePressed,
             ),
           ],

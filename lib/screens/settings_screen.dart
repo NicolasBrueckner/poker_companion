@@ -4,6 +4,7 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:poker_companion/core/purchases.dart';
 import 'package:poker_companion/core/utility.dart';
+import 'package:poker_companion/l10n/app_localizations.dart';
 import 'package:poker_companion/screens/base_screen.dart';
 import 'package:poker_companion/widgets/buttons.dart';
 import 'package:poker_companion/widgets/colorswitch.dart';
@@ -73,8 +74,9 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
   @override
   Widget build(BuildContext context) {
     final scheme = ThemeController.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
     return BaseScreen(
-      title: 'Settings',
+      title: l10n.settings,
       actions: [
         for (final suit in ['club', 'heart', 'spade', 'diamond'])
           ScaleTransition(
@@ -94,17 +96,21 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
           spacing: 28,
           children: [
             _SettingsSection(
-              label: 'APPEARANCE',
+              label: l10n.appearanceSection,
               child: _SettingsCard(child: ColorSwitch()),
             ),
             _SettingsSection(
-              label: 'GAME DEFAULTS',
+              label: l10n.languageSection,
+              child: _SettingsCard(padding: EdgeInsets.zero, child: const _LanguagePicker()),
+            ),
+            _SettingsSection(
+              label: l10n.gameDefaultsSection,
               child: _SettingsCard(
                 child: Row(
                   children: [
                     Expanded(
                       child: Text(
-                        'Default player count',
+                        l10n.defaultPlayerCount,
                         style: TextStyle(fontWeight: FontWeight.w600, color: scheme.onSurface),
                       ),
                     ),
@@ -123,7 +129,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
               ),
             ),
             _SettingsSection(
-              label: 'GENERAL',
+              label: l10n.generalSection,
               child: _SettingsCard(
                 padding: EdgeInsets.zero,
                 child: Column(
@@ -132,13 +138,13 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                     Divider(height: 1, color: scheme.onSurface.withValues(alpha: 0.1)),
                     _SettingsRow(
                       icon: Icons.restore,
-                      label: 'Restore purchases',
+                      label: l10n.restorePurchases,
                       onTap: PurchaseService.restore,
                     ),
                     Divider(height: 1, color: scheme.onSurface.withValues(alpha: 0.1)),
                     _SettingsRow(
                       icon: Icons.info_outline,
-                      label: 'About',
+                      label: l10n.about,
                       onTap: () => showDialog(
                         context: context,
                         builder: (context) => Dialog(
@@ -151,20 +157,20 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                               children: [
                                 FractionallySizedBox(widthFactor: 0.75, child: SuitsRowWidget()),
                                 Text(
-                                  'Poker Payout Calculator',
+                                  l10n.appTitle,
                                   style: TextStyle(fontWeight: FontWeight.w700, color: scheme.onSurface),
                                 ),
                                 Text(
-                                  'Version ${_appVersion ?? ''}',
+                                  l10n.appVersion(_appVersion ?? ''),
                                   style: TextStyle(color: scheme.onSurface.withValues(alpha: 0.55)),
                                 ),
                                 const _PrivacyPolicyLink(),
                                 Text(
-                                  'Copyright \u00a9 ${DateTime.now().year} Mosscode Studios.\n All rights reserved.',
+                                  l10n.copyrightNotice(DateTime.now().year),
                                   textAlign: TextAlign.center,
                                   style: TextStyle(color: scheme.onSurface.withValues(alpha: 0.55)),
                                 ),
-                                BaseTextButton(label: 'Close', onPressed: () => Navigator.pop(context)),
+                                BaseTextButton(label: l10n.close, onPressed: () => Navigator.pop(context)),
                               ],
                             ),
                           ),
@@ -268,22 +274,87 @@ class _SettingsRow extends StatelessWidget {
   }
 }
 
+class _LanguagePicker extends StatelessWidget {
+  const _LanguagePicker();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final scheme = ThemeController.of(context).colorScheme;
+    final localeController = LocaleController.of(context);
+    final currentCode = localeController.locale?.languageCode;
+
+    final options = <(String?, String)>[
+      (null, l10n.systemDefault),
+      ('en', 'English'),
+      ('de', 'Deutsch'),
+      ('es', 'Español'),
+      ('fr', 'Français'),
+    ];
+
+    return Column(
+      children: [
+        for (var i = 0; i < options.length; i++) ...[
+          if (i > 0) Divider(height: 1, color: scheme.onSurface.withValues(alpha: 0.1)),
+          _LanguageOptionRow(
+            label: options[i].$2,
+            selected: currentCode == options[i].$1,
+            onTap: () => localeController.setLocale(options[i].$1 == null ? null : Locale(options[i].$1!)),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+class _LanguageOptionRow extends StatelessWidget {
+  const _LanguageOptionRow({required this.label, required this.selected, required this.onTap});
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = ThemeController.of(context).colorScheme;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        splashColor: scheme.primary.withValues(alpha: 0.12),
+        highlightColor: scheme.primary.withValues(alpha: 0.08),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(label, style: TextStyle(fontWeight: FontWeight.w600, color: scheme.onSurface)),
+              ),
+              if (selected) Icon(Icons.check, size: 20, color: scheme.primary),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _RemoveAdsRow extends StatelessWidget {
   const _RemoveAdsRow();
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return ValueListenableBuilder<bool>(
       valueListenable: PurchaseService.adsRemoved,
       builder: (context, removed, _) {
         if (removed) {
-          return const _SettingsRow(icon: Icons.check_circle_outline, label: 'Ads removed', onTap: null);
+          return _SettingsRow(icon: Icons.check_circle_outline, label: l10n.adsRemoved, onTap: null);
         }
         return ValueListenableBuilder<ProductDetails?>(
           valueListenable: PurchaseService.product,
           builder: (context, product, _) => _SettingsRow(
             icon: Icons.diamond_outlined,
-            label: 'Remove ads',
+            label: l10n.removeAds,
             trailing: _PricePill(label: product?.price ?? '...'),
             onTap: product == null ? null : PurchaseService.buyRemoveAds,
           ),
@@ -319,7 +390,9 @@ class _PrivacyPolicyLink extends StatelessWidget {
   Future<void> _open(BuildContext context) async {
     final launched = await launchUrl(_url, mode: LaunchMode.externalApplication);
     if (!launched && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Could not open link')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.couldNotOpenLink)));
     }
   }
 
@@ -329,7 +402,7 @@ class _PrivacyPolicyLink extends StatelessWidget {
     return GestureDetector(
       onTap: () => _open(context),
       child: Text(
-        'Privacy Policy',
+        AppLocalizations.of(context)!.privacyPolicy,
         style: TextStyle(
           color: scheme.primary,
           fontWeight: FontWeight.w600,

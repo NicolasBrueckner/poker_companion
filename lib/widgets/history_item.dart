@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:poker_companion/core/payout_data.dart';
 import 'package:poker_companion/core/utility.dart';
+import 'package:poker_companion/l10n/app_localizations.dart';
 import 'package:poker_companion/screens/history_screen.dart';
 
 class StatisticItem extends StatelessWidget {
@@ -11,17 +12,18 @@ class StatisticItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = ThemeController.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
     return Dismissible(
       key: ValueKey(info.id),
       direction: DismissDirection.endToStart,
       confirmDismiss: (_) => showDialog<bool>(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text('Delete session?'),
-          content: const Text('This session will be permanently removed.'),
+          title: Text(l10n.deleteSessionTitle),
+          content: Text(l10n.deleteSessionContent),
           actions: [
-            TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: const Text('Cancel')),
-            TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: const Text('Delete')),
+            TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: Text(l10n.cancel)),
+            TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: Text(l10n.delete)),
           ],
         ),
       ),
@@ -70,7 +72,7 @@ class _SessionHeader extends StatelessWidget {
       children: [
         Text(info.date, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
         Text(
-          'Pot  ${info.pot.toStringAsFixed(2)}',
+          AppLocalizations.of(context)!.potLabel(info.pot.toStringAsFixed(2)),
           style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: scheme.onSurface.withValues(alpha: 0.55)),
         ),
       ],
@@ -82,6 +84,7 @@ class _TableHeaders extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = ThemeController.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
     final style = TextStyle(
       fontSize: 11,
       fontWeight: FontWeight.w600,
@@ -90,18 +93,18 @@ class _TableHeaders extends StatelessWidget {
     );
     return Row(
       children: [
-        Expanded(flex: 4, child: Text('Player', style: style)),
+        Expanded(flex: 4, child: Text(l10n.tableHeaderPlayer, style: style)),
         Expanded(
           flex: 3,
-          child: Text('Buy In', style: style, textAlign: TextAlign.right),
+          child: Text(l10n.tableHeaderBuyIn, style: style, textAlign: TextAlign.right),
         ),
         Expanded(
           flex: 3,
-          child: Text('Cash Out', style: style, textAlign: TextAlign.right),
+          child: Text(l10n.tableHeaderCashOut, style: style, textAlign: TextAlign.right),
         ),
         Expanded(
           flex: 3,
-          child: Text('Net', style: style, textAlign: TextAlign.right),
+          child: Text(l10n.tableHeaderNet, style: style, textAlign: TextAlign.right),
         ),
       ],
     );

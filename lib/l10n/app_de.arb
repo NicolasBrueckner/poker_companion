@@ -1,0 +1,73 @@
+{
+  "@@locale": "de",
+
+  "appTitle": "Poker Payout Calculator",
+
+  "newSession": "Neue Session",
+  "history": "Verlauf",
+  "settings": "Einstellungen",
+
+  "cancel": "Abbrechen",
+  "delete": "Löschen",
+  "update": "Aktualisieren",
+  "close": "Schließen",
+
+  "tableHeaderPlayer": "Spieler",
+  "tableHeaderBuyIn": "Einsatz",
+  "tableHeaderCashOut": "Auszahlung",
+  "tableHeaderNet": "Netto",
+
+  "addPlayer": "+ Spieler hinzufügen",
+  "calculate": "Berechnen",
+  "edit": "Bearbeiten",
+  "save": "Speichern",
+
+  "totalsMismatch": "Summen stimmen nicht überein - Einsatz: {sumIn}, Auszahlung: {sumOut}",
+
+  "sessionSaved": "Session gespeichert",
+  "presetSaved": "Vorlage gespeichert",
+  "noSettlementsNeeded": "Keine Ausgleichszahlungen nötig",
+  "settlements": "Ausgleichszahlungen",
+  "nameHint": "Name",
+
+  "noSessionsSavedYet": "Noch keine Sessions gespeichert",
+
+  "potLabel": "Pot  {amount}",
+
+  "deleteSessionTitle": "Session löschen?",
+  "deleteSessionContent": "Diese Session wird dauerhaft gelöscht.",
+
+  "loadPreset": "Vorlage laden",
+  "noPresetsSavedYet": "Noch keine Vorlagen gespeichert",
+  "updatePresetTitle": "Vorlage aktualisieren?",
+  "updatePresetContent": "Die zuvor gespeicherte Vorlage wird überschrieben.",
+  "updatePresetButton": "+ Vorlage aktualisieren",
+  "savePresetButton": "+ Aktuelle Session als Vorlage speichern",
+  "deletePresetTitle": "Vorlage löschen?",
+  "deletePresetContent": "Diese Vorlage wird dauerhaft gelöscht.",
+
+  "playersCount": "{count, plural, one{1 Spieler} other{{count} Spieler}}",
+
+  "appearanceSection": "DARSTELLUNG",
+  "gameDefaultsSection": "SPIELVOREINSTELLUNGEN",
+  "generalSection": "ALLGEMEIN",
+  "languageSection": "SPRACHE",
+  "defaultPlayerCount": "Standardanzahl Spieler",
+
+  "removeAds": "Werbung entfernen",
+  "adsRemoved": "Werbung entfernt",
+  "restorePurchases": "Käufe wiederherstellen",
+  "about": "Über",
+  "couldNotOpenLink": "Link konnte nicht geöffnet werden",
+  "privacyPolicy": "Datenschutzerklärung",
+
+  "appVersion": "Version {version}",
+
+  "copyrightNotice": "Copyright © {year} Mosscode Studios.\nAlle Rechte vorbehalten.",
+
+  "lightTheme": "HELL",
+  "darkTheme": "DUNKEL",
+  "systemDefault": "Systemstandard",
+
+  "pokerSessionHeading": "Poker Session"
+}

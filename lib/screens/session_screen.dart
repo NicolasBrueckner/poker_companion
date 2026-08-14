@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:poker_companion/core/payout_data.dart';
 import 'package:poker_companion/core/utility.dart';
+import 'package:poker_companion/l10n/app_localizations.dart';
 import 'package:poker_companion/screens/base_screen.dart';
 import 'package:poker_companion/screens/history_screen.dart';
 import 'package:poker_companion/widgets/buttons.dart';
@@ -70,10 +71,9 @@ class _SessionScreenState extends State<SessionScreen> {
     FocusManager.instance.primaryFocus?.unfocus();
 
     if ((sumIn - sumOut).abs() > 0.001) {
+      final l10n = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Totals don\'t match - in: ${sumIn.toStringAsFixed(2)}, out: ${sumOut.toStringAsFixed(2)}'),
-        ),
+        SnackBar(content: Text(l10n.totalsMismatch(sumIn.toStringAsFixed(2), sumOut.toStringAsFixed(2)))),
       );
       return;
     }
@@ -114,7 +114,7 @@ class _SessionScreenState extends State<SessionScreen> {
   void _onSessionSavePressed() async {
     await _saveSession();
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Session saved')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.sessionSaved)));
   }
 
   Future<void> _saveSession() async {
@@ -193,7 +193,7 @@ class _SessionScreenState extends State<SessionScreen> {
     }
     await SessionUtility.save(presets);
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Preset saved')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.presetSaved)));
     }
     FocusManager.instance.primaryFocus?.unfocus();
     return _currentPreset;
@@ -202,7 +202,7 @@ class _SessionScreenState extends State<SessionScreen> {
   @override
   Widget build(BuildContext context) {
     return BaseScreen(
-      title: 'New Session',
+      title: AppLocalizations.of(context)!.newSession,
       actions: [
         IconButton(onPressed: _onPresetsPressed, icon: Icon(Icons.bookmark_border)),
         IconButton(onPressed: _resetSession, icon: Icon(Icons.loop)),
@@ -248,6 +248,7 @@ class _ColumnHeaders extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = ThemeController.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
     final style = TextStyle(
       fontSize: 11,
       fontWeight: FontWeight.w600,
@@ -261,19 +262,19 @@ class _ColumnHeaders extends StatelessWidget {
         children: [
           Expanded(
             flex: 4,
-            child: Text('Player', style: style, textAlign: TextAlign.center),
+            child: Text(l10n.tableHeaderPlayer, style: style, textAlign: TextAlign.center),
           ),
           Expanded(
             flex: 3,
-            child: Text('Buy In', style: style, textAlign: TextAlign.center),
+            child: Text(l10n.tableHeaderBuyIn, style: style, textAlign: TextAlign.center),
           ),
           Expanded(
             flex: 3,
-            child: Text('Cash Out', style: style, textAlign: TextAlign.center),
+            child: Text(l10n.tableHeaderCashOut, style: style, textAlign: TextAlign.center),
           ),
           Expanded(
             flex: 3,
-            child: Text('Net', style: style, textAlign: TextAlign.center),
+            child: Text(l10n.tableHeaderNet, style: style, textAlign: TextAlign.center),
           ),
         ],
       ),
@@ -297,24 +298,25 @@ class _ActionButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (!condition) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          BaseTextButton(label: '+ Add Player', primary: false, onPressed: onAddPressed),
+          BaseTextButton(label: l10n.addPlayer, primary: false, onPressed: onAddPressed),
           const SizedBox(height: 8),
-          BaseTextButton(label: 'Calculate', onPressed: onCalculatePressed),
+          BaseTextButton(label: l10n.calculate, onPressed: onCalculatePressed),
         ],
       );
     }
     return Row(
       children: [
         Expanded(
-          child: BaseTextButton(label: 'Edit', primary: false, onPressed: onEditPressed),
+          child: BaseTextButton(label: l10n.edit, primary: false, onPressed: onEditPressed),
         ),
         const SizedBox(width: 8),
         Expanded(
-          child: BaseTextButton(label: 'Save', onPressed: onSavePressed),
+          child: BaseTextButton(label: l10n.save, onPressed: onSavePressed),
         ),
       ],
     );
@@ -328,11 +330,12 @@ class _SettlementsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = ThemeController.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
     if (transactions.isEmpty) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 16),
         child: Text(
-          'No settlements needed',
+          l10n.noSettlementsNeeded,
           textAlign: TextAlign.center,
           style: TextStyle(color: scheme.onSurface.withValues(alpha: 0.5)),
         ),
@@ -344,7 +347,7 @@ class _SettlementsList extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(bottom: 8),
           child: Text(
-            'Settlements',
+            l10n.settlements,
             style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: scheme.onSurface, letterSpacing: 0.5),
           ),
         ),

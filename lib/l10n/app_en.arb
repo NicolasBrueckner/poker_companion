@@ -1,0 +1,105 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "Poker Payout Calculator",
+  "@appTitle": {"description": "Application title, shown as home/new session screen title and in the about dialog"},
+
+  "newSession": "New Session",
+  "history": "History",
+  "settings": "Settings",
+
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "update": "Update",
+  "close": "Close",
+
+  "tableHeaderPlayer": "Player",
+  "tableHeaderBuyIn": "Buy In",
+  "tableHeaderCashOut": "Cash Out",
+  "tableHeaderNet": "Net",
+
+  "addPlayer": "+ Add Player",
+  "calculate": "Calculate",
+  "edit": "Edit",
+  "save": "Save",
+
+  "totalsMismatch": "Totals don't match - in: {sumIn}, out: {sumOut}",
+  "@totalsMismatch": {
+    "description": "Shown when buy-in and cash-out totals don't match",
+    "placeholders": {
+      "sumIn": {"type": "String"},
+      "sumOut": {"type": "String"}
+    }
+  },
+
+  "sessionSaved": "Session saved",
+  "presetSaved": "Preset saved",
+  "noSettlementsNeeded": "No settlements needed",
+  "settlements": "Settlements",
+  "nameHint": "Name",
+
+  "noSessionsSavedYet": "No sessions saved yet",
+
+  "potLabel": "Pot  {amount}",
+  "@potLabel": {
+    "description": "Total pot amount shown on a history/preset card",
+    "placeholders": {
+      "amount": {"type": "String"}
+    }
+  },
+
+  "deleteSessionTitle": "Delete session?",
+  "deleteSessionContent": "This session will be permanently removed.",
+
+  "loadPreset": "Load Preset",
+  "noPresetsSavedYet": "No presets saved yet",
+  "updatePresetTitle": "Update preset?",
+  "updatePresetContent": "This will overwrite the previously saved preset.",
+  "updatePresetButton": "+ Update Preset",
+  "savePresetButton": "+ Save Current as Preset",
+  "deletePresetTitle": "Delete preset?",
+  "deletePresetContent": "This preset will be permanently removed.",
+
+  "playersCount": "{count, plural, one{1 player} other{{count} players}}",
+  "@playersCount": {
+    "description": "Number of players in a preset",
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+
+  "appearanceSection": "APPEARANCE",
+  "gameDefaultsSection": "GAME DEFAULTS",
+  "generalSection": "GENERAL",
+  "languageSection": "LANGUAGE",
+  "defaultPlayerCount": "Default player count",
+
+  "removeAds": "Remove ads",
+  "adsRemoved": "Ads removed",
+  "restorePurchases": "Restore purchases",
+  "about": "About",
+  "couldNotOpenLink": "Could not open link",
+  "privacyPolicy": "Privacy Policy",
+
+  "appVersion": "Version {version}",
+  "@appVersion": {
+    "description": "App version shown in the about dialog",
+    "placeholders": {
+      "version": {"type": "String"}
+    }
+  },
+
+  "copyrightNotice": "Copyright © {year} Mosscode Studios.\n All rights reserved.",
+  "@copyrightNotice": {
+    "description": "Copyright notice in the about dialog",
+    "placeholders": {
+      "year": {"type": "int"}
+    }
+  },
+
+  "lightTheme": "LIGHT",
+  "darkTheme": "DARK",
+  "systemDefault": "System default",
+
+  "pokerSessionHeading": "Poker Session"
+}
