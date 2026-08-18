@@ -136,11 +136,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                   children: [
                     const _RemoveAdsRow(),
                     Divider(height: 1, color: scheme.onSurface.withValues(alpha: 0.1)),
-                    _SettingsRow(
-                      icon: Icons.restore,
-                      label: l10n.restorePurchases,
-                      onTap: PurchaseService.restore,
-                    ),
+                    _SettingsRow(icon: Icons.restore, label: l10n.restorePurchases, onTap: PurchaseService.restore),
                     Divider(height: 1, color: scheme.onSurface.withValues(alpha: 0.1)),
                     _SettingsRow(
                       icon: Icons.info_outline,
@@ -181,6 +177,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                 ),
               ),
             ),
+            SizedBox(height: 50),
           ],
         ),
       ),
@@ -327,7 +324,10 @@ class _LanguageOptionRow extends StatelessWidget {
           child: Row(
             children: [
               Expanded(
-                child: Text(label, style: TextStyle(fontWeight: FontWeight.w600, color: scheme.onSurface)),
+                child: Text(
+                  label,
+                  style: TextStyle(fontWeight: FontWeight.w600, color: scheme.onSurface),
+                ),
               ),
               if (selected) Icon(Icons.check, size: 20, color: scheme.primary),
             ],

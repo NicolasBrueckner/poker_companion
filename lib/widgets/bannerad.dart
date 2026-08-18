@@ -61,7 +61,7 @@ class _CustomBannerAdState extends State<CustomBannerAd> {
         final ad = _bannerAd;
         return SizedBox(
           width: size.width.toDouble(),
-          height: size.height.toDouble(),
+          height: 0,
           child: ad == null ? null : AdWidget(ad: ad),
         );
       },
